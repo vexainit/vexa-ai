@@ -7,6 +7,7 @@ backend/*.db
 backend/.pytest_cache/
 __pycache__/
 *.pyc
-.env
+/.env
+backend/.env
 .git/
 *.pdf
