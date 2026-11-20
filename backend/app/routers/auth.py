@@ -334,6 +334,81 @@ def get_me(user: User = Depends(get_current_user)):
     return {"user": serialize_user(user)}
 
 
+class ChangePasswordRequest(BaseModel):
+    current_password: str | None = None
+    new_password: str = Field(min_length=8, max_length=128)
+
+
+@router.patch("/profile")
+async def update_profile(
+    full_name: str | None = Form(None),
+    domain_tags: str | None = Form(None),
+    profile_meta: str | None = Form(None),
+    incorporation_certificate: UploadFile | None = File(None),
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Updates role-specific profile fields, preferences, and optional Business Incorporation Certificate."""
+    db_user = db.query(User).filter(User.id == user.id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail={"error_code": "ENTITY_NOT_FOUND", "message": "User not found.", "details": {}})
+
+    if full_name and full_name.strip():
+        db_user.full_name = full_name.strip()
+
+    if domain_tags is not None:
+        try:
+            parsed_tags = json.loads(domain_tags)
+            if isinstance(parsed_tags, list):
+                db_user.domain_tags = json.dumps([str(t).strip() for t in parsed_tags if str(t).strip()])
+        except Exception:
+            raise HTTPException(status_code=400, detail={"error_code": "INVALID_METADATA", "message": "Invalid domain_tags JSON.", "details": {}})
+
+    existing_meta = json.loads(db_user.profile_meta_json or "{}")
+    if profile_meta is not None:
+        try:
+            incoming = json.loads(profile_meta)
+            if isinstance(incoming, dict):
+                # Preserve private server certificate path unless replaced by a new file upload
+                incoming.pop("incorporation_cert_path", None)
+                incoming.pop("has_incorporation_cert", None)
+                existing_meta.update(incoming)
+        except Exception:
+            raise HTTPException(status_code=400, detail={"error_code": "INVALID_METADATA", "message": "Invalid profile_meta JSON.", "details": {}})
+
+    if db_user.role == "BUSINESS" and incorporation_certificate is not None and incorporation_certificate.filename:
+        await _store_certificate_if_present(db_user.id, incorporation_certificate, existing_meta)
+
+    db_user.profile_meta_json = json.dumps(existing_meta)
+    log_audit_event(db, db_user.id, "PROFILE_UPDATED", db_user.id, {"role": db_user.role})
+    db.commit()
+    db.refresh(db_user)
+    return {"user": serialize_user(db_user)}
+
+
+@router.post("/change-password")
+def change_password(
+    payload: ChangePasswordRequest,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    db_user = db.query(User).filter(User.id == user.id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail={"error_code": "ENTITY_NOT_FOUND", "message": "User not found.", "details": {}})
+
+    if db_user.password_hash:
+        if not payload.current_password or not verify_password(payload.current_password, db_user.password_hash):
+            raise HTTPException(
+                status_code=400,
+                detail={"error_code": "INVALID_CURRENT_PASSWORD", "message": "Current password is incorrect.", "details": {}},
+            )
+
+    db_user.password_hash = hash_password(payload.new_password)
+    log_audit_event(db, db_user.id, "PASSWORD_CHANGED", db_user.id, {})
+    db.commit()
+    return {"updated": True}
+
+
 @router.get("/certificate/{user_id}")
 def download_incorporation_certificate(
     user_id: str,

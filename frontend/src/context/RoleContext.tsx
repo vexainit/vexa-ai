@@ -14,8 +14,8 @@ export interface ActiveSession {
 
 export const ROLE_DEFAULT_ROUTE: Record<UserRole, string> = {
   BUSINESS: '/business',
-  STUDENT: '/student/challenges',
-  MENTOR: '/mentor/reviews',
+  STUDENT: '/student',
+  MENTOR: '/mentor',
   ADMIN: '/admin',
 };
 

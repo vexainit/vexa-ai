@@ -81,6 +81,8 @@ def serialize_user(u: User) -> dict[str, Any]:
         "role": u.role,
         "domain_tags": json.loads(u.domain_tags or "[]"),
         "profile_meta": safe_meta,
+        "has_password": bool(u.password_hash),
+        "has_firebase_auth": bool(u.firebase_uid),
         "is_verified": bool(u.is_verified),
         "is_active": bool(u.is_active),
         "created_at": u.created_at.isoformat() if u.created_at else "",

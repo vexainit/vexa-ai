@@ -10,8 +10,11 @@ import {
   FilePlus2,
   FolderKanban,
   GraduationCap,
+  Handshake,
   LayoutDashboard,
   LogOut,
+  Settings,
+  ShieldCheck,
   SlidersHorizontal,
   UserCircle,
   Users,
@@ -31,9 +34,9 @@ interface NavGroup {
 }
 
 const ROLE_TITLES: Record<UserRole, string> = {
-  BUSINESS: 'Business workspace',
-  STUDENT: 'Student workspace',
-  MENTOR: 'Mentor workspace',
+  BUSINESS: 'Business portal',
+  STUDENT: 'Student portal',
+  MENTOR: 'Mentor portal',
   ADMIN: 'Admin control',
 };
 
@@ -41,23 +44,35 @@ function getSidebarGroups(role: UserRole, userId: string): NavGroup[] {
   if (role === 'BUSINESS') {
     return [
       {
-        heading: 'Operations',
+        heading: 'Overview',
         items: [
-          { to: '/business', label: 'Diagnostic audits', icon: LayoutDashboard, end: true },
-          { to: '/business/new-audit', label: 'New audit', icon: FilePlus2 },
+          { to: '/business', label: 'Analytics overview', icon: LayoutDashboard, end: true },
+          { to: '/business/new-audit', label: 'New 60s audit', icon: FilePlus2 },
         ],
       },
       {
-        heading: 'Organization',
-        items: [{ to: '/profile', label: 'Company profile', icon: Building2 }],
+        heading: 'Execution',
+        items: [
+          { to: '/business/pilots', label: 'Pilots and solutions', icon: Handshake },
+        ],
+      },
+      {
+        heading: 'Account',
+        items: [
+          { to: '/profile', label: 'Company profile', icon: Building2 },
+          { to: '/settings', label: 'Settings', icon: Settings },
+        ],
       },
     ];
   }
   if (role === 'STUDENT') {
     return [
       {
-        heading: 'Marketplace',
-        items: [{ to: '/student/challenges', label: 'Open challenges', icon: Compass }],
+        heading: 'Overview',
+        items: [
+          { to: '/student', label: 'Builder overview', icon: LayoutDashboard, end: true },
+          { to: '/student/challenges', label: 'Challenge marketplace', icon: Compass },
+        ],
       },
       {
         heading: 'Proof of work',
@@ -68,32 +83,44 @@ function getSidebarGroups(role: UserRole, userId: string): NavGroup[] {
       },
       {
         heading: 'Account',
-        items: [{ to: '/profile', label: 'College profile', icon: GraduationCap }],
+        items: [
+          { to: '/profile', label: 'College profile', icon: GraduationCap },
+          { to: '/settings', label: 'Settings', icon: Settings },
+        ],
       },
     ];
   }
   if (role === 'MENTOR') {
     return [
       {
-        heading: 'Verification',
+        heading: 'Overview',
         items: [
+          { to: '/mentor', label: 'Mentor overview', icon: LayoutDashboard, end: true },
           { to: '/mentor/reviews', label: 'Review queue', icon: ClipboardCheck },
+        ],
+      },
+      {
+        heading: 'Reference',
+        items: [
           { to: '/student/challenges', label: 'Published briefs', icon: Briefcase },
         ],
       },
       {
         heading: 'Account',
-        items: [{ to: '/profile', label: 'Mentor credentials', icon: UserCircle }],
+        items: [
+          { to: '/profile', label: 'Mentor credentials', icon: UserCircle },
+          { to: '/settings', label: 'Settings', icon: Settings },
+        ],
       },
     ];
   }
   return [
     {
-      heading: 'Overview',
-      items: [{ to: '/admin', label: 'Platform telemetry', icon: Activity, end: true }],
+      heading: 'Telemetry',
+      items: [{ to: '/admin', label: 'Platform overview', icon: Activity, end: true }],
     },
     {
-      heading: 'Accounts',
+      heading: 'Ecosystem control',
       items: [
         { to: '/admin/businesses', label: 'Businesses', icon: Building2 },
         { to: '/admin/students', label: 'Students', icon: GraduationCap },
@@ -101,10 +128,11 @@ function getSidebarGroups(role: UserRole, userId: string): NavGroup[] {
       ],
     },
     {
-      heading: 'System',
+      heading: 'Database and system',
       items: [
         { to: '/admin/database', label: 'Database explorer', icon: Database },
         { to: '/admin/governance', label: 'Moderation and logs', icon: SlidersHorizontal },
+        { to: '/settings', label: 'Settings', icon: Settings },
       ],
     },
   ];
@@ -133,7 +161,7 @@ export function RoleSidebar({
   const content = (
     <div className="flex h-full flex-col bg-vb-surface border-r border-vb-border">
       {/* Brand Header */}
-      <div className="h-14 px-5 flex items-center justify-between border-b border-vb-border">
+      <div className="h-14 px-5 flex items-center justify-between border-b border-vb-border shrink-0">
         <Link to="/" className="flex items-center gap-2.5" onClick={onCloseMobile}>
           <span className="w-7 h-7 rounded bg-vb-teal flex items-center justify-center text-white font-display font-bold text-xs">
             VB
@@ -152,10 +180,10 @@ export function RoleSidebar({
         </button>
       </div>
 
-      {/* Role Context */}
-      <div className="px-5 py-3 border-b border-vb-border flex items-center justify-between">
+      {/* Role Context Bar */}
+      <div className="px-5 py-2.5 border-b border-vb-border flex items-center justify-between shrink-0">
         <span className="text-sm font-medium text-vb-muted">{ROLE_TITLES[user.role]}</span>
-        {user.role === 'MENTOR' && (
+        {user.role === 'MENTOR' ? (
           <span
             className={`text-xs font-medium px-2 py-0.5 rounded ${
               user.is_verified
@@ -165,17 +193,22 @@ export function RoleSidebar({
           >
             {user.is_verified ? 'Verified' : 'Pending'}
           </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 text-xs text-vb-verified font-medium">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Protected</span>
+          </span>
         )}
       </div>
 
       {/* Grouped Navigation */}
-      <nav className="flex-1 px-3 py-5 space-y-6 overflow-y-auto" aria-label="Sidebar navigation">
+      <nav className="flex-1 px-3 py-4 space-y-5 overflow-y-auto" aria-label="Sidebar navigation">
         {groups.map((group) => (
           <div key={group.heading}>
-            <div className="px-3 mb-2 text-[13px] font-medium text-vb-muted">
+            <div className="px-3 mb-1.5 text-[13px] font-medium text-vb-muted">
               {group.heading}
             </div>
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {group.items.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -187,8 +220,8 @@ export function RoleSidebar({
                     className={({ isActive }) =>
                       `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
                         isActive
-                          ? 'bg-vb-canvas text-vb-ink font-semibold border border-vb-border'
-                          : 'text-vb-muted hover:text-vb-ink hover:bg-vb-canvas/70 border border-transparent'
+                          ? 'bg-vb-teal-tint text-vb-teal font-semibold border border-vb-teal/25'
+                          : 'text-vb-muted hover:text-vb-ink hover:bg-vb-canvas border border-transparent'
                       }`
                     }
                   >
@@ -203,20 +236,22 @@ export function RoleSidebar({
       </nav>
 
       {/* Bottom Account Footer */}
-      <div className="p-4 border-t border-vb-border space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-vb-canvas border border-vb-border flex items-center justify-center text-sm font-display font-bold text-vb-ink shrink-0">
+      <div className="p-4 border-t border-vb-border space-y-3 shrink-0 bg-vb-canvas/40">
+        <Link to="/profile" onClick={onCloseMobile} className="flex items-center gap-3 group">
+          <div className="w-8 h-8 rounded-full bg-vb-surface border border-vb-border flex items-center justify-center text-sm font-display font-bold text-vb-ink shrink-0">
             {user.full_name.charAt(0).toUpperCase()}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-semibold text-vb-ink truncate">{user.full_name}</div>
+            <div className="text-sm font-semibold text-vb-ink truncate group-hover:text-vb-teal">
+              {user.full_name}
+            </div>
             <div className="text-xs text-vb-muted truncate">{user.email}</div>
           </div>
-        </div>
+        </Link>
         <button
           type="button"
           onClick={handleSignOut}
-          className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-md border border-vb-border text-sm font-medium text-vb-ink hover:bg-vb-canvas transition-colors"
+          className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-md border border-vb-border bg-vb-surface text-sm font-medium text-vb-ink hover:bg-vb-canvas transition-colors"
         >
           <LogOut className="w-4 h-4 text-vb-muted" />
           <span>Sign out</span>
@@ -227,13 +262,13 @@ export function RoleSidebar({
 
   return (
     <>
-      <aside className="hidden lg:block fixed top-[3px] left-0 bottom-0 w-[256px] z-30">
+      <aside className="hidden lg:block fixed top-[3px] left-0 bottom-0 w-[248px] z-30">
         {content}
       </aside>
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-40 flex">
-          <div className="fixed inset-0 bg-vb-ink/35" onClick={onCloseMobile} />
-          <aside className="relative w-[272px] max-w-[85vw] h-full z-50 pt-[3px]">
+          <div className="fixed inset-0 bg-black/40" onClick={onCloseMobile} />
+          <aside className="relative w-[268px] max-w-[85vw] h-full z-50 pt-[3px]">
             {content}
           </aside>
         </div>

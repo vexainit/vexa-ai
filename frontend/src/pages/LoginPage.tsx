@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AlertCircle, Building2, ClipboardCheck, GraduationCap, Loader2, SlidersHorizontal } from 'lucide-react';
 import { ROLE_DEFAULT_ROUTE, useRole } from '../context/RoleContext';
+import { ThemeToggle } from '../components/layout/ThemeToggle';
 import { apiFetch } from '../lib/api';
 import { isFirebaseConfigured, PENDING_FIREBASE_TOKEN_KEY, signInWithGoogleFirebase } from '../lib/firebase';
 import type { UserProfile, UserRole } from '../types/vexa';
@@ -105,9 +106,12 @@ export function LoginPage() {
           </span>
           <span>Vexa Bridge</span>
         </Link>
-        <Link to="/register" className="text-sm font-medium text-vb-teal hover:underline">
-          Create account
-        </Link>
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <Link to="/register" className="text-sm font-medium text-vb-teal hover:underline">
+            Create account
+          </Link>
+        </div>
       </header>
 
       <main className="flex-1 flex items-center justify-center px-4 py-12">

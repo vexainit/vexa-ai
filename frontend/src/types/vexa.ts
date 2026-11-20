@@ -32,8 +32,14 @@ export interface UserProfileMeta {
   years_experience?: string;
   linkedin_url?: string;
   expertise_summary?: string;
-  // Admin fields
+  // Admin & shared preferences
   department?: string;
+  preferences?: {
+    email_notifications?: boolean;
+    review_alerts?: boolean;
+    weekly_digest?: boolean;
+    default_workspace_mode?: WorkspaceMode;
+  };
 }
 
 export interface UserProfile {
@@ -43,6 +49,8 @@ export interface UserProfile {
   role: UserRole;
   domain_tags: string[];
   profile_meta?: UserProfileMeta;
+  has_password?: boolean;
+  has_firebase_auth?: boolean;
   is_verified: boolean;
   is_active: boolean;
   created_at: string;

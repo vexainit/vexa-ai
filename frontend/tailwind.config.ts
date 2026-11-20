@@ -1,20 +1,34 @@
 import type { Config } from 'tailwindcss';
 
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
         vb: {
-          canvas: '#F8F7F4',
-          surface: '#FFFFFF',
-          border: '#E5E2DC',
-          ink: '#18181B',
-          muted: '#52525B',
-          teal: { DEFAULT: '#0F4C5C', dark: '#0B3945', tint: '#E6F1F3' },
-          terracotta: { DEFAULT: '#C85A32', tint: '#FDF0EB' },
-          verified: { DEFAULT: '#15803D', tint: '#DCFCE7' },
-          revision: { DEFAULT: '#B45309', tint: '#FEF3C7' },
+          canvas: 'rgb(var(--vb-canvas-rgb) / <alpha-value>)',
+          surface: 'rgb(var(--vb-surface-rgb) / <alpha-value>)',
+          border: 'rgb(var(--vb-border-rgb) / <alpha-value>)',
+          ink: 'rgb(var(--vb-ink-rgb) / <alpha-value>)',
+          muted: 'rgb(var(--vb-muted-rgb) / <alpha-value>)',
+          teal: {
+            DEFAULT: 'rgb(var(--vb-teal-rgb) / <alpha-value>)',
+            dark: 'rgb(var(--vb-teal-dark-rgb) / <alpha-value>)',
+            tint: 'rgb(var(--vb-teal-tint-rgb) / <alpha-value>)',
+          },
+          terracotta: {
+            DEFAULT: 'rgb(var(--vb-terracotta-rgb) / <alpha-value>)',
+            tint: 'rgb(var(--vb-terracotta-tint-rgb) / <alpha-value>)',
+          },
+          verified: {
+            DEFAULT: 'rgb(var(--vb-verified-rgb) / <alpha-value>)',
+            tint: 'rgb(var(--vb-verified-tint-rgb) / <alpha-value>)',
+          },
+          revision: {
+            DEFAULT: 'rgb(var(--vb-revision-rgb) / <alpha-value>)',
+            tint: 'rgb(var(--vb-revision-tint-rgb) / <alpha-value>)',
+          },
         },
       },
       fontFamily: {
