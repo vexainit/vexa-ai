@@ -1,0 +1,181 @@
+txn_id,timestamp_ist,merchant,upi_id,category,amount_inr,is_recurring
+UPI-3143,2026-09-01 09:55,Myntra Apparel,myntra@okhdfcbank,Shopping,2051,false
+UPI-3093,2026-09-01 12:11,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,1563,false
+UPI-3155,2026-09-01 14:00,D-Mart Ready,dmart@okhdfcbank,Groceries,1350,false
+UPI-3046,2026-09-01 15:05,Chai Point Express,chaipoint@okhdfcbank,Snacks & Coffee,194,false
+UPI-3108,2026-09-01 16:07,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,820,false
+UPI-3058,2026-09-01 18:59,AutoRickshaw Pay,driver982@ibl,Commute,214,false
+UPI-3079,2026-09-01 19:08,Zomato Dinner,zomato@oksbi,Food Delivery,336,false
+UPI-3119,2026-09-01 19:16,Myntra Apparel,myntra@okhdfcbank,Shopping,1349,false
+UPI-3136,2026-09-01 19:19,Myntra Apparel,myntra@okhdfcbank,Shopping,2073,false
+UPI-3173,2026-09-01 20:08,JioFiber Broadband,jiofiber@okaxis,Utilities,866,false
+UPI-3179,2026-09-01 20:30,D-Mart Ready,dmart@okhdfcbank,Groceries,596,false
+UPI-3110,2026-09-01 21:49,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,1208,false
+UPI-3042,2026-09-01 22:03,Swiggy Midnight,chaipoint@okhdfcbank,Food Delivery,233,false
+UPI-3033,2026-09-02 02:52,Zomato Late Bites,chaipoint@okhdfcbank,Food Delivery,122,false
+UPI-3025,2026-09-02 08:36,Metro Tap Cafe,metrotap@paytm,Snacks & Coffee,119,false
+UPI-3145,2026-09-02 13:20,Swiggy Orders,swiggy@okaxis,Food Delivery,660,false
+UPI-3132,2026-09-02 16:54,Myntra Apparel,myntra@okhdfcbank,Shopping,839,false
+UPI-3105,2026-09-02 17:42,Zomato Dinner,zomato@oksbi,Food Delivery,620,false
+UPI-3052,2026-09-02 18:38,Metro Tap Cafe,metrotap@paytm,Snacks & Coffee,214,false
+UPI-3161,2026-09-02 19:08,JioFiber Broadband,jiofiber@okaxis,Utilities,991,false
+UPI-3167,2026-09-02 20:02,JioFiber Broadband,jiofiber@okaxis,Utilities,828,false
+UPI-3062,2026-09-02 20:28,Chai Point Express,chaipoint@okhdfcbank,Snacks & Coffee,253,false
+UPI-3101,2026-09-02 22:10,Zomato Dinner,zomato@oksbi,Food Delivery,398,false
+UPI-3012,2026-09-02 23:38,Swiggy Midnight,swiggyim@okaxis,Food Delivery,197,false
+UPI-3156,2026-09-03 10:14,Torrent Power Bill,torrent@oksbi,Utilities,2382,false
+UPI-3028,2026-09-03 10:47,AutoRickshaw Pay,driver982@ibl,Commute,250,false
+UPI-3014,2026-09-03 11:26,AutoRickshaw Pay,driver982@ibl,Commute,267,false
+UPI-3068,2026-09-03 14:56,AutoRickshaw Pay,driver982@ibl,Commute,241,false
+UPI-3139,2026-09-03 23:02,Zomato Dinner,zomato@oksbi,Food Delivery,473,false
+UPI-3024,2026-09-04 00:53,Zomato Late Bites,swiggyim@okaxis,Food Delivery,224,false
+UPI-3147,2026-09-04 20:55,Myntra Apparel,myntra@okhdfcbank,Shopping,959,false
+UPI-3036,2026-09-04 22:35,Zomato Late Bites,driver982@ibl,Food Delivery,252,false
+UPI-3084,2026-09-05 09:16,Myntra Apparel,myntra@okhdfcbank,Shopping,1150,false
+UPI-3122,2026-09-05 12:52,JioFiber Broadband,jiofiber@okaxis,Utilities,983,false
+UPI-3170,2026-09-05 18:50,Torrent Power Bill,torrent@oksbi,Utilities,1863,false
+UPI-3018,2026-09-05 22:07,Zomato Late Bites,blinkit@ybl,Food Delivery,247,false
+UPI-3094,2026-09-05 23:50,Zomato Dinner,zomato@oksbi,Food Delivery,794,false
+UPI-3102,2026-09-06 09:25,Torrent Power Bill,torrent@oksbi,Utilities,2183,false
+UPI-3001,2026-09-06 10:15,CloudFit Pro Pass,cloudfit@okhdfcbank,Subscription,999,true
+UPI-3095,2026-09-06 10:48,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,1072,false
+UPI-3146,2026-09-06 10:58,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,1592,false
+UPI-3142,2026-09-06 11:26,Myntra Apparel,myntra@okhdfcbank,Shopping,1816,false
+UPI-3123,2026-09-06 12:08,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,1610,false
+UPI-3070,2026-09-06 13:07,Torrent Power Bill,torrent@oksbi,Utilities,2769,false
+UPI-3138,2026-09-06 13:14,D-Mart Ready,dmart@okhdfcbank,Groceries,1787,false
+UPI-3072,2026-09-06 14:36,D-Mart Ready,dmart@okhdfcbank,Groceries,1262,false
+UPI-3047,2026-09-06 15:13,Blinkit Mini,blinkit@ybl,Quick Commerce,106,false
+UPI-3103,2026-09-06 16:40,Myntra Apparel,myntra@okhdfcbank,Shopping,2339,false
+UPI-3056,2026-09-06 20:35,AutoRickshaw Pay,driver982@ibl,Commute,201,false
+UPI-3106,2026-09-07 00:57,Swiggy Orders,swiggy@okaxis,Food Delivery,791,false
+UPI-3063,2026-09-07 01:24,Zomato Late Bites,blinkit@ybl,Food Delivery,107,false
+UPI-3162,2026-09-07 10:01,Torrent Power Bill,torrent@oksbi,Utilities,2642,false
+UPI-3154,2026-09-07 10:50,JioFiber Broadband,jiofiber@okaxis,Utilities,1040,false
+UPI-3082,2026-09-07 13:58,Myntra Apparel,myntra@okhdfcbank,Shopping,1481,false
+UPI-3075,2026-09-08 00:50,Zomato Dinner,zomato@oksbi,Food Delivery,609,false
+UPI-3008,2026-09-08 01:26,Zomato Late Bites,zomato@oksbi,Food Delivery,267,false
+UPI-3099,2026-09-08 02:02,Zomato Dinner,zomato@oksbi,Food Delivery,881,false
+UPI-3013,2026-09-08 11:17,Blinkit Mini,blinkit@ybl,Quick Commerce,89,false
+UPI-3074,2026-09-08 13:53,Zomato Dinner,zomato@oksbi,Food Delivery,469,false
+UPI-3011,2026-09-08 15:26,AutoRickshaw Pay,driver982@ibl,Commute,159,false
+UPI-3019,2026-09-08 21:02,Blinkit Mini,blinkit@ybl,Quick Commerce,154,false
+UPI-3100,2026-09-08 21:08,Torrent Power Bill,torrent@oksbi,Utilities,1826,false
+UPI-3169,2026-09-09 00:01,Zomato Dinner,zomato@oksbi,Food Delivery,547,false
+UPI-3048,2026-09-09 00:33,Swiggy Midnight,zomato@oksbi,Food Delivery,250,false
+UPI-3041,2026-09-09 12:55,Metro Tap Cafe,metrotap@paytm,Snacks & Coffee,123,false
+UPI-3035,2026-09-09 14:09,AutoRickshaw Pay,driver982@ibl,Commute,104,false
+UPI-3053,2026-09-09 14:27,AutoRickshaw Pay,driver982@ibl,Commute,134,false
+UPI-3022,2026-09-09 15:36,Metro Tap Cafe,metrotap@paytm,Snacks & Coffee,235,false
+UPI-3112,2026-09-09 17:06,D-Mart Ready,dmart@okhdfcbank,Groceries,852,false
+UPI-3126,2026-09-09 20:57,Apollo Pharmacy,apollo@paytm,Healthcare,1133,false
+UPI-3067,2026-09-09 23:13,Zomato Late Bites,zomato@oksbi,Food Delivery,115,false
+UPI-3069,2026-09-10 12:53,D-Mart Ready,dmart@okhdfcbank,Groceries,1550,false
+UPI-3086,2026-09-10 15:44,Zomato Dinner,zomato@oksbi,Food Delivery,705,false
+UPI-3010,2026-09-10 19:43,Metro Tap Cafe,metrotap@paytm,Snacks & Coffee,252,false
+UPI-3111,2026-09-10 19:55,Swiggy Orders,swiggy@okaxis,Food Delivery,385,false
+UPI-3159,2026-09-10 22:10,Swiggy Orders,swiggy@okaxis,Food Delivery,499,false
+UPI-3005,2026-09-11 02:47,Swiggy Midnight,zomato@oksbi,Food Delivery,155,false
+UPI-3002,2026-09-11 10:15,StreamBox Ultra,streambox@okaxis,Subscription,649,true
+UPI-3165,2026-09-11 16:05,Torrent Power Bill,torrent@oksbi,Utilities,2533,false
+UPI-3168,2026-09-11 22:22,Zomato Dinner,zomato@oksbi,Food Delivery,881,false
+UPI-3045,2026-09-12 00:03,Zomato Late Bites,blinkit@ybl,Food Delivery,162,false
+UPI-3107,2026-09-12 11:29,Apollo Pharmacy,apollo@paytm,Healthcare,656,false
+UPI-3127,2026-09-12 12:57,Apollo Pharmacy,apollo@paytm,Healthcare,482,false
+UPI-3020,2026-09-12 14:51,Chai Point Express,chaipoint@okhdfcbank,Snacks & Coffee,202,false
+UPI-3040,2026-09-13 13:49,Chai Point Express,chaipoint@okhdfcbank,Snacks & Coffee,249,false
+UPI-3049,2026-09-13 14:09,Swiggy Instamart,swiggyim@okaxis,Quick Commerce,116,false
+UPI-3158,2026-09-13 14:47,Torrent Power Bill,torrent@oksbi,Utilities,2149,false
+UPI-3151,2026-09-13 18:35,Apollo Pharmacy,apollo@paytm,Healthcare,909,false
+UPI-3076,2026-09-13 19:27,Apollo Pharmacy,apollo@paytm,Healthcare,472,false
+UPI-3113,2026-09-14 09:35,Torrent Power Bill,torrent@oksbi,Utilities,2943,false
+UPI-3065,2026-09-14 15:01,AutoRickshaw Pay,driver982@ibl,Commute,143,false
+UPI-3092,2026-09-14 15:03,JioFiber Broadband,jiofiber@okaxis,Utilities,1058,false
+UPI-3115,2026-09-14 18:49,Apollo Pharmacy,apollo@paytm,Healthcare,471,false
+UPI-3073,2026-09-14 21:53,Swiggy Orders,swiggy@okaxis,Food Delivery,912,false
+UPI-3054,2026-09-14 23:04,Zomato Late Bites,driver982@ibl,Food Delivery,222,false
+UPI-3007,2026-09-15 02:11,Swiggy Midnight,zomato@oksbi,Food Delivery,93,false
+UPI-3078,2026-09-15 12:34,Myntra Apparel,myntra@okhdfcbank,Shopping,1946,false
+UPI-3163,2026-09-15 12:52,D-Mart Ready,dmart@okhdfcbank,Groceries,1503,false
+UPI-3133,2026-09-15 13:34,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,1383,false
+UPI-3003,2026-09-16 10:15,NewsDesk Digital,newsdesk@ybl,Subscription,499,true
+UPI-3116,2026-09-16 18:20,Myntra Apparel,myntra@okhdfcbank,Shopping,2453,false
+UPI-3172,2026-09-16 20:40,Myntra Apparel,myntra@okhdfcbank,Shopping,2114,false
+UPI-3166,2026-09-16 21:12,Torrent Power Bill,torrent@oksbi,Utilities,1578,false
+UPI-3134,2026-09-16 21:52,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,1140,false
+UPI-3055,2026-09-17 08:03,Swiggy Instamart,swiggyim@okaxis,Quick Commerce,155,false
+UPI-3141,2026-09-17 10:29,JioFiber Broadband,jiofiber@okaxis,Utilities,1089,false
+UPI-3085,2026-09-17 21:12,Zomato Dinner,zomato@oksbi,Food Delivery,655,false
+UPI-3051,2026-09-17 22:58,Swiggy Midnight,metrotap@paytm,Food Delivery,142,false
+UPI-3044,2026-09-18 00:02,Swiggy Midnight,zomato@oksbi,Food Delivery,258,false
+UPI-3038,2026-09-18 13:25,Blinkit Mini,blinkit@ybl,Quick Commerce,228,false
+UPI-3029,2026-09-18 13:33,Chai Point Express,chaipoint@okhdfcbank,Snacks & Coffee,127,false
+UPI-3171,2026-09-18 18:44,Torrent Power Bill,torrent@oksbi,Utilities,2251,false
+UPI-3021,2026-09-18 23:58,Zomato Late Bites,swiggyim@okaxis,Food Delivery,121,false
+UPI-3027,2026-09-19 02:43,Zomato Late Bites,swiggyim@okaxis,Food Delivery,106,false
+UPI-3125,2026-09-19 09:37,JioFiber Broadband,jiofiber@okaxis,Utilities,899,false
+UPI-3091,2026-09-19 10:31,Apollo Pharmacy,apollo@paytm,Healthcare,1137,false
+UPI-3030,2026-09-19 23:44,Zomato Late Bites,swiggyim@okaxis,Food Delivery,229,false
+UPI-3178,2026-09-20 02:49,Swiggy Orders,swiggy@okaxis,Food Delivery,528,false
+UPI-3176,2026-09-20 09:55,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,1042,false
+UPI-3031,2026-09-20 12:42,AutoRickshaw Pay,driver982@ibl,Commute,158,false
+UPI-3128,2026-09-20 13:19,Apollo Pharmacy,apollo@paytm,Healthcare,711,false
+UPI-3017,2026-09-20 14:21,Blinkit Mini,blinkit@ybl,Quick Commerce,109,false
+UPI-3130,2026-09-20 21:49,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,1490,false
+UPI-3061,2026-09-21 08:07,Metro Tap Cafe,metrotap@paytm,Snacks & Coffee,103,false
+UPI-3004,2026-09-21 10:15,QuickDrive Storage,quickdrive@oksbi,Subscription,743,true
+UPI-3023,2026-09-21 17:06,Chai Point Express,chaipoint@okhdfcbank,Snacks & Coffee,132,false
+UPI-3177,2026-09-21 20:37,Apollo Pharmacy,apollo@paytm,Healthcare,1101,false
+UPI-3009,2026-09-21 22:00,Zomato Late Bites,driver982@ibl,Food Delivery,104,false
+UPI-3057,2026-09-21 22:45,Swiggy Midnight,driver982@ibl,Food Delivery,142,false
+UPI-3174,2026-09-22 01:28,Swiggy Orders,swiggy@okaxis,Food Delivery,571,false
+UPI-3148,2026-09-22 11:02,Apollo Pharmacy,apollo@paytm,Healthcare,359,false
+UPI-3077,2026-09-22 11:05,Myntra Apparel,myntra@okhdfcbank,Shopping,2595,false
+UPI-3109,2026-09-22 13:45,Myntra Apparel,myntra@okhdfcbank,Shopping,1891,false
+UPI-3120,2026-09-22 14:10,Apollo Pharmacy,apollo@paytm,Healthcare,503,false
+UPI-3088,2026-09-22 15:28,JioFiber Broadband,jiofiber@okaxis,Utilities,1114,false
+UPI-3081,2026-09-22 15:51,Torrent Power Bill,torrent@oksbi,Utilities,2314,false
+UPI-3026,2026-09-22 17:48,Chai Point Express,chaipoint@okhdfcbank,Snacks & Coffee,237,false
+UPI-3087,2026-09-23 10:45,Myntra Apparel,myntra@okhdfcbank,Shopping,1305,false
+UPI-3129,2026-09-23 14:40,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,1192,false
+UPI-3059,2026-09-23 15:49,Swiggy Instamart,swiggyim@okaxis,Quick Commerce,138,false
+UPI-3071,2026-09-23 20:31,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,1438,false
+UPI-3175,2026-09-24 00:56,Zomato Dinner,zomato@oksbi,Food Delivery,323,false
+UPI-3131,2026-09-24 01:01,Swiggy Orders,swiggy@okaxis,Food Delivery,400,false
+UPI-3032,2026-09-24 13:29,AutoRickshaw Pay,driver982@ibl,Commute,198,false
+UPI-3150,2026-09-24 16:45,D-Mart Ready,dmart@okhdfcbank,Groceries,1514,false
+UPI-3118,2026-09-24 17:09,Apollo Pharmacy,apollo@paytm,Healthcare,987,false
+UPI-3064,2026-09-24 17:42,Chai Point Express,chaipoint@okhdfcbank,Snacks & Coffee,249,false
+UPI-3114,2026-09-25 09:52,Torrent Power Bill,torrent@oksbi,Utilities,2243,false
+UPI-3140,2026-09-25 16:22,Swiggy Orders,swiggy@okaxis,Food Delivery,345,false
+UPI-3096,2026-09-25 16:35,Zomato Dinner,zomato@oksbi,Food Delivery,833,false
+UPI-3050,2026-09-25 18:05,AutoRickshaw Pay,driver982@ibl,Commute,240,false
+UPI-3104,2026-09-25 18:42,D-Mart Ready,dmart@okhdfcbank,Groceries,597,false
+UPI-3157,2026-09-26 09:28,HPCL Fuel Station,hpcl@ybl,Fuel & Travel,553,false
+UPI-3135,2026-09-26 11:28,Zomato Dinner,zomato@oksbi,Food Delivery,775,false
+UPI-3137,2026-09-26 12:11,Myntra Apparel,myntra@okhdfcbank,Shopping,2234,false
+UPI-3043,2026-09-27 01:07,Swiggy Midnight,zomato@oksbi,Food Delivery,98,false
+UPI-3066,2026-09-27 01:56,Zomato Late Bites,swiggyim@okaxis,Food Delivery,213,false
+UPI-3117,2026-09-27 10:57,Myntra Apparel,myntra@okhdfcbank,Shopping,2073,false
+UPI-3164,2026-09-27 16:03,Torrent Power Bill,torrent@oksbi,Utilities,2460,false
+UPI-3149,2026-09-27 16:55,JioFiber Broadband,jiofiber@okaxis,Utilities,1064,false
+UPI-3098,2026-09-27 18:31,Myntra Apparel,myntra@okhdfcbank,Shopping,2551,false
+UPI-3006,2026-09-27 23:15,Zomato Late Bites,chaipoint@okhdfcbank,Food Delivery,205,false
+UPI-3060,2026-09-28 02:52,Swiggy Midnight,chaipoint@okhdfcbank,Food Delivery,218,false
+UPI-3097,2026-09-28 09:23,JioFiber Broadband,jiofiber@okaxis,Utilities,895,false
+UPI-3124,2026-09-28 10:38,Apollo Pharmacy,apollo@paytm,Healthcare,713,false
+UPI-3083,2026-09-28 11:51,D-Mart Ready,dmart@okhdfcbank,Groceries,1562,false
+UPI-3144,2026-09-28 14:04,Myntra Apparel,myntra@okhdfcbank,Shopping,2875,false
+UPI-3080,2026-09-28 16:51,JioFiber Broadband,jiofiber@okaxis,Utilities,960,false
+UPI-3152,2026-09-28 19:27,D-Mart Ready,dmart@okhdfcbank,Groceries,1704,false
+UPI-3153,2026-09-28 20:26,Torrent Power Bill,torrent@oksbi,Utilities,2486,false
+UPI-3016,2026-09-29 01:45,Swiggy Midnight,zomato@oksbi,Food Delivery,232,false
+UPI-3039,2026-09-29 01:52,Swiggy Midnight,zomato@oksbi,Food Delivery,107,false
+UPI-3090,2026-09-29 10:32,JioFiber Broadband,jiofiber@okaxis,Utilities,1075,false
+UPI-3089,2026-09-29 10:52,D-Mart Ready,dmart@okhdfcbank,Groceries,2286,false
+UPI-3121,2026-09-29 17:38,Myntra Apparel,myntra@okhdfcbank,Shopping,1046,false
+UPI-3015,2026-09-29 22:29,Zomato Late Bites,swiggyim@okaxis,Food Delivery,124,false
+UPI-3180,2026-09-30 11:26,Torrent Power Bill,torrent@oksbi,Utilities,2686,false
+UPI-3034,2026-09-30 12:34,AutoRickshaw Pay,driver982@ibl,Commute,234,false
+UPI-3037,2026-09-30 13:20,Blinkit Mini,blinkit@ybl,Quick Commerce,128,false
+UPI-3160,2026-09-30 16:50,Myntra Apparel,myntra@okhdfcbank,Shopping,2597,false

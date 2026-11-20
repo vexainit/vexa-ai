@@ -1,0 +1,117 @@
+{
+  "version": 2,
+  "skills": {
+    "finding-google-skills": {
+      "source": "google/skills",
+      "commit": "219a8ff487ad03c6f0c5edd6c5622b68ccbaf553",
+      "sourceType": "github",
+      "skillPath": "skills/developers/finding-google-skills/SKILL.md",
+      "computedHash": "e0a5b85fcbe5626a71b07c853e215c109eab2fbe75e2edcefd6e921e62184752",
+      "installMode": "copy"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "commit": "e4bb5d960d87126ff3b3a8af1a104b7db67560ba",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "83485963700bcf11d5bf78118facb301676b69d918fee2e45a95e7f1a2840f6c",
+      "installMode": "copy"
+    },
+    "gemini-api-cli": {
+      "source": "google-gemini/gemini-skills",
+      "commit": "c4d0c62c1240e08a90546186bf320600ab6a039a",
+      "sourceType": "github",
+      "skillPath": "skills/gemini-api-cli/SKILL.md",
+      "computedHash": "14863670f4e9406da5403e619d37abb230ce097fa76666481dff0bf69eb56b6b",
+      "installMode": "copy"
+    },
+    "gemini-api-dev": {
+      "source": "google-gemini/gemini-skills",
+      "commit": "c4d0c62c1240e08a90546186bf320600ab6a039a",
+      "sourceType": "github",
+      "skillPath": "skills/gemini-api-dev/SKILL.md",
+      "computedHash": "b3823bd7210e46d4528ca85ebc03326842a6df47ced9a856a1729639f9756c12",
+      "installMode": "copy"
+    },
+    "gemini-frontend-design": {
+      "source": "google-gemini/demolab",
+      "commit": "cd0c1f8540c0186ec9592af972a0700fa20909d4",
+      "sourceType": "github",
+      "skillPath": "skills/gemini-frontend-design/SKILL.md",
+      "computedHash": "9a0cfd9094b4e4c762c4a218b0da34178453004bbf350baef81f3f31800dfd36",
+      "installMode": "copy"
+    },
+    "gemini-live-api-dev": {
+      "source": "google-gemini/gemini-skills",
+      "commit": "c4d0c62c1240e08a90546186bf320600ab6a039a",
+      "sourceType": "github",
+      "skillPath": "skills/gemini-live-api-dev/SKILL.md",
+      "computedHash": "d3a558b43681fd11798a25c63650368be6c2623d0aba6fabe7835483d092509b",
+      "installMode": "copy"
+    },
+    "gemini-omni-flash-api": {
+      "source": "google-gemini/gemini-skills",
+      "commit": "c4d0c62c1240e08a90546186bf320600ab6a039a",
+      "sourceType": "github",
+      "skillPath": "skills/gemini-omni-flash-api/SKILL.md",
+      "computedHash": "a975a1e145284a6e27bcc6a1759946271ac62fb0f671b342c3705eab9812a3dc",
+      "installMode": "copy"
+    },
+    "google-cicd-deploy": {
+      "source": "google/skills",
+      "commit": "219a8ff487ad03c6f0c5edd6c5622b68ccbaf553",
+      "sourceType": "github",
+      "skillPath": "skills/cloud/google-cicd-deploy/SKILL.md",
+      "computedHash": "4e84177cdaaf72aea22f2d9458d38c9819f62cec13da7e8c28edd804ae5f8baa",
+      "installMode": "copy"
+    },
+    "tailwind-design-system": {
+      "source": "wshobson/agents",
+      "commit": "42203085cfc5736204bf0f6d436dff7e1da0bf3f",
+      "sourceType": "github",
+      "skillPath": "plugins/frontend-mobile-development/skills/tailwind-design-system/SKILL.md",
+      "computedHash": "c807f0c9619e8c389879f55846c2e395956f1073ab6d01a93fbb30b340015ab1",
+      "installMode": "copy"
+    },
+    "typescript-advanced-types": {
+      "source": "wshobson/agents",
+      "commit": "42203085cfc5736204bf0f6d436dff7e1da0bf3f",
+      "sourceType": "github",
+      "skillPath": "plugins/javascript-typescript/skills/typescript-advanced-types/SKILL.md",
+      "computedHash": "34c5b3863fde1fc85981ac583ecaf0140471b374d0b7002ac5bc0bea2cf38b24",
+      "installMode": "copy"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "commit": "2de1134dc4d1cfe112934611ae5803ae17a1bd7e",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/ui-ux-pro-max/SKILL.md",
+      "computedHash": "605686282fb6812d8e3f4b1a06c9fb8ba7be4d7395090f41f221a9ba5a3dbe6b",
+      "installMode": "copy"
+    },
+    "vercel-composition-patterns": {
+      "source": "vercel-labs/agent-skills",
+      "commit": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
+      "sourceType": "github",
+      "skillPath": "skills/composition-patterns/SKILL.md",
+      "computedHash": "f711ed8b16162eaa712abbcdbbae6c926f86c57e60127735fecc3ad0dd85b3fa",
+      "installMode": "copy"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "commit": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "7991ed4fbecdac23f47c1a40c243e00a212a9e7f3604db93959b3ae11dffe299",
+      "installMode": "copy"
+    },
+    "webapp-testing": {
+      "source": "anthropics/skills",
+      "commit": "e4bb5d960d87126ff3b3a8af1a104b7db67560ba",
+      "sourceType": "github",
+      "skillPath": "skills/webapp-testing/SKILL.md",
+      "computedHash": "48cd9a742a59250edec6db89cf081ef5465f365e2133f6d6c5e29c380b754b7d",
+      "installMode": "copy"
+    }
+  }
+}

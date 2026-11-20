@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --vb-bg-canvas: #F8F7F4;
+  --vb-surface: #FFFFFF;
+  --vb-border: #E5E2DC;
+  --vb-ink-primary: #18181B;
+  --vb-ink-muted: #52525B;
+  --vb-brand-teal: #0F4C5C;
+  --vb-alert-terracotta: #C85A32;
+  --vb-status-verified: #15803D;
+  --vb-status-revision: #B45309;
+}
+
+@layer base {
+  body {
+    background-color: var(--vb-bg-canvas);
+    color: var(--vb-ink-primary);
+    font-family: 'DM Sans', 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid #0F4C5C;
+    outline-offset: 2px;
+  }
+}
+
+.tabular-num {
+  font-family: 'JetBrains Mono', 'DejaVu Sans Mono', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.vb-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E2DC;
+  border-radius: 6px;
+}
+
+.vb-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #52525B;
+}
