@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { AlertCircle, Building2, ClipboardCheck, GraduationCap, Loader2, Upload } from 'lucide-react';
+import { AlertCircle, Building2, CheckCircle2, ClipboardCheck, GraduationCap, Loader2, Upload } from 'lucide-react';
 import { ROLE_DEFAULT_ROUTE, useRole } from '../context/RoleContext';
 import { apiFetch } from '../lib/api';
+import { isFirebaseConfigured, PENDING_FIREBASE_TOKEN_KEY, signInWithGoogleFirebase } from '../lib/firebase';
 import type { UserProfile } from '../types/vexa';
 
 type RegisterRole = 'BUSINESS' | 'STUDENT' | 'MENTOR';
@@ -18,6 +19,18 @@ export function RegisterPage() {
   const [email, setEmail] = useState(searchParams.get('email') || '');
   const [password, setPassword] = useState('');
   const [skillsInput, setSkillsInput] = useState('');
+
+  // Pending Firebase Google token (when signing up with Google Auth)
+  const [pendingFbToken, setPendingFbToken] = useState<string | null>(() => {
+    if (searchParams.get('google') === '1') {
+      try {
+        return sessionStorage.getItem(PENDING_FIREBASE_TOKEN_KEY);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  });
 
   // Business-specific credentials
   const [companyName, setCompanyName] = useState('');
@@ -46,10 +59,44 @@ export function RegisterPage() {
   const { setAuthSession } = useRole();
   const navigate = useNavigate();
 
+  const handleGooglePrefill = async () => {
+    setError('');
+    setSubmitting(true);
+    try {
+      const idToken = await signInWithGoogleFirebase();
+      const res = await apiFetch<{
+        needs_registration: boolean;
+        access_token?: string;
+        user?: UserProfile;
+        email?: string;
+        full_name?: string;
+      }>('/auth/firebase', {
+        method: 'POST',
+        token: null,
+        body: JSON.stringify({ id_token: idToken }),
+      });
+
+      if (!res.needs_registration && res.access_token && res.user) {
+        setAuthSession(res.access_token, res.user);
+        navigate(ROLE_DEFAULT_ROUTE[res.user.role]);
+        return;
+      }
+      sessionStorage.setItem(PENDING_FIREBASE_TOKEN_KEY, idToken);
+      setPendingFbToken(idToken);
+      if (res.email) setEmail(res.email);
+      if (res.full_name) setFullName(res.full_name);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (password.length < 8) {
+
+    if (!pendingFbToken && password.length < 8) {
       setError('Password must be at least 8 characters.');
       return;
     }
@@ -87,8 +134,6 @@ export function RegisterPage() {
 
     const formData = new FormData();
     formData.append('full_name', fullName.trim());
-    formData.append('email', email.trim());
-    formData.append('password', password);
     formData.append('role', role);
     formData.append('domain_tags', JSON.stringify(tags));
     formData.append('profile_meta', JSON.stringify(profileMeta));
@@ -98,11 +143,24 @@ export function RegisterPage() {
 
     setSubmitting(true);
     try {
-      const res = await apiFetch<{ access_token: string; user: UserProfile }>('/auth/register', {
-        method: 'POST',
-        token: null,
-        body: formData,
-      });
+      let res: { access_token: string; user: UserProfile };
+      if (pendingFbToken) {
+        formData.append('id_token', pendingFbToken);
+        res = await apiFetch<{ access_token: string; user: UserProfile }>('/auth/firebase-complete', {
+          method: 'POST',
+          token: null,
+          body: formData,
+        });
+        sessionStorage.removeItem(PENDING_FIREBASE_TOKEN_KEY);
+      } else {
+        formData.append('email', email.trim());
+        formData.append('password', password);
+        res = await apiFetch<{ access_token: string; user: UserProfile }>('/auth/register', {
+          method: 'POST',
+          token: null,
+          body: formData,
+        });
+      }
       setAuthSession(res.access_token, res.user);
       navigate(ROLE_DEFAULT_ROUTE[res.user.role]);
     } catch (err) {
@@ -135,7 +193,7 @@ export function RegisterPage() {
               Create Your Verified Account
             </h1>
             <p className="text-xs text-vb-muted">
-              Role-specific credentials are stored securely in PostgreSQL / Cloud Storage for Platform Admin verification.
+              Role-specific credentials are stored securely in the database for Platform Admin verification.
             </p>
           </div>
 
@@ -175,6 +233,48 @@ export function RegisterPage() {
               </div>
             )}
 
+            {/* Google Auth Status / Button */}
+            {pendingFbToken ? (
+              <div className="p-3 rounded bg-vb-verified-tint border border-vb-verified/30 text-xs text-vb-verified flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>
+                    Google verified (<strong>{email}</strong>) — finish your role details below.
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    sessionStorage.removeItem(PENDING_FIREBASE_TOKEN_KEY);
+                    setPendingFbToken(null);
+                  }}
+                  className="underline text-[11px] shrink-0"
+                >
+                  Use email/password
+                </button>
+              </div>
+            ) : (
+              isFirebaseConfigured && (
+                <>
+                  <button
+                    type="button"
+                    disabled={submitting}
+                    onClick={handleGooglePrefill}
+                    className="w-full py-2.5 px-4 rounded border border-vb-border bg-vb-surface hover:bg-vb-canvas text-xs font-semibold text-vb-ink flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <span className="font-mono font-bold text-vb-teal">G</span>
+                    <span>Sign Up with Google (Firebase Auth)</span>
+                  </button>
+                  <div className="relative flex items-center justify-center">
+                    <div className="border-t border-vb-border w-full" />
+                    <span className="bg-vb-surface px-2.5 text-[10px] font-mono uppercase text-vb-muted">
+                      or email
+                    </span>
+                  </div>
+                </>
+              )
+            )}
+
             {/* Common Account Fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -193,24 +293,27 @@ export function RegisterPage() {
                 <input
                   type="email"
                   value={email}
+                  disabled={Boolean(pendingFbToken)}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="name@company.in"
-                  className="w-full px-3 py-2 text-sm rounded border border-vb-border bg-vb-surface"
+                  className="w-full px-3 py-2 text-sm rounded border border-vb-border bg-vb-surface disabled:bg-vb-canvas disabled:text-vb-muted"
                   required
                 />
               </div>
-              <div className="sm:col-span-2">
-                <label className="vb-label block mb-1.5">Password (min 8 characters)</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  minLength={8}
-                  placeholder="Create a strong password"
-                  className="w-full px-3 py-2 text-sm rounded border border-vb-border bg-vb-surface"
-                  required
-                />
-              </div>
+              {!pendingFbToken && (
+                <div className="sm:col-span-2">
+                  <label className="vb-label block mb-1.5">Password (min 8 characters)</label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    minLength={8}
+                    placeholder="Create a strong password"
+                    className="w-full px-3 py-2 text-sm rounded border border-vb-border bg-vb-surface"
+                    required
+                  />
+                </div>
+              )}
             </div>
 
             <div className="border-t border-vb-border pt-4 space-y-4">
@@ -276,7 +379,9 @@ export function RegisterPage() {
                       <label className="flex items-center gap-3 px-3.5 py-2.5 rounded border border-dashed border-vb-border hover:border-vb-teal bg-vb-canvas/60 cursor-pointer text-xs">
                         <Upload className="w-4 h-4 text-vb-teal shrink-0" />
                         <span className="text-vb-ink truncate">
-                          {certFile ? `${certFile.name} (${(certFile.size / 1024).toFixed(0)} KB)` : 'Upload incorporation certificate (stored in private bucket)'}
+                          {certFile
+                            ? `${certFile.name} (${(certFile.size / 1024).toFixed(0)} KB)`
+                            : 'Upload incorporation certificate (stored in private bucket)'}
                         </span>
                         <input
                           type="file"
@@ -445,7 +550,11 @@ export function RegisterPage() {
               className="w-full py-2.5 rounded bg-vb-teal text-white text-xs font-semibold hover:bg-vb-teal-dark flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-              <span>Create {role.charAt(0) + role.slice(1).toLowerCase()} Account</span>
+              <span>
+                {pendingFbToken
+                  ? `Complete ${role.charAt(0) + role.slice(1).toLowerCase()} Registration`
+                  : `Create ${role.charAt(0) + role.slice(1).toLowerCase()} Account`}
+              </span>
             </button>
           </form>
         </div>

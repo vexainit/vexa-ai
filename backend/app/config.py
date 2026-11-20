@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     )
 
     gemini_api_key: str = ""
+    gemini_model: str = "gemini-3.5-flash-lite"
+    gemini_fallback_models: str = "gemini-3.1-flash-lite,gemini-3.5-flash"
     database_url: str = f"sqlite:///{(BACKEND_DIR / 'vexa_bridge.db').as_posix()}"
     gcs_bucket_raw: str = ""
     gcs_bucket_masked: str = ""

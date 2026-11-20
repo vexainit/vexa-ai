@@ -1,4 +1,4 @@
-"""Authentication & Role-Specific Registration Router (Business, Student, Mentor, Admin + Firebase Auth)."""
+"""Authentication & Role-Specific Registration Router (Business, Student, Mentor, Admin + Firebase Google Auth)."""
 from __future__ import annotations
 
 import json
@@ -40,6 +40,61 @@ class FirebaseAuthRequest(BaseModel):
     profile_meta: dict = Field(default_factory=dict)
 
 
+def _validate_role_metadata(role_upper: str, meta_dict: dict) -> None:
+    if role_upper == "BUSINESS":
+        if not str(meta_dict.get("company_name", "")).strip():
+            raise HTTPException(
+                status_code=400,
+                detail={"error_code": "MISSING_FIELD", "message": "Registered Company Name is required for Business accounts.", "details": {}},
+            )
+        if not str(meta_dict.get("cin_or_gstin", "")).strip():
+            raise HTTPException(
+                status_code=400,
+                detail={"error_code": "MISSING_FIELD", "message": "CIN / GSTIN / Registration Number is required for Business verification.", "details": {}},
+            )
+    elif role_upper == "STUDENT":
+        if not str(meta_dict.get("college_name", "")).strip():
+            raise HTTPException(
+                status_code=400,
+                detail={"error_code": "MISSING_FIELD", "message": "College / University Name is required for Student accounts.", "details": {}},
+            )
+        if not str(meta_dict.get("graduation_year", "")).strip():
+            raise HTTPException(
+                status_code=400,
+                detail={"error_code": "MISSING_FIELD", "message": "Graduation Year is required for Student accounts.", "details": {}},
+            )
+    elif role_upper == "MENTOR":
+        if not str(meta_dict.get("organization", "")).strip() or not str(meta_dict.get("job_title", "")).strip():
+            raise HTTPException(
+                status_code=400,
+                detail={"error_code": "MISSING_FIELD", "message": "Current Organization and Job Title are required for Mentor accounts.", "details": {}},
+            )
+
+
+async def _store_certificate_if_present(
+    user_id: str,
+    incorporation_certificate: UploadFile | None,
+    meta_dict: dict,
+) -> None:
+    if incorporation_certificate is None or not incorporation_certificate.filename:
+        return
+    cert_name = Path(incorporation_certificate.filename).name
+    if not cert_name.lower().endswith((".pdf", ".png", ".jpg", ".jpeg")):
+        raise HTTPException(
+            status_code=400,
+            detail={"error_code": "FILE_TYPE_UNSUPPORTED", "message": "Incorporation certificate must be PDF, PNG, or JPG.", "details": {}},
+        )
+    cert_bytes = await incorporation_certificate.read()
+    if len(cert_bytes) > 5 * 1024 * 1024:
+        raise HTTPException(
+            status_code=413,
+            detail={"error_code": "FILE_TOO_LARGE", "message": "Certificate must be under 5 MB.", "details": {}},
+        )
+    stored_cert = storage_service.write_bytes("raw", f"certs/{user_id}_{cert_name}", cert_bytes)
+    meta_dict["incorporation_cert_path"] = stored_cert
+    meta_dict["incorporation_cert_name"] = cert_name
+
+
 @router.post("/register", status_code=201)
 async def register_user(
     full_name: str = Form(...),
@@ -71,7 +126,7 @@ async def register_user(
     if db.query(User).filter(User.email == clean_email).first():
         raise HTTPException(
             status_code=409,
-            detail={"error_code": "EMAIL_EXISTS", "message": "An account with this email already exists.", "details": {}},
+            detail={"error_code": "EMAIL_EXISTS", "message": "An account with this email already exists. Please sign in instead.", "details": {}},
         )
 
     try:
@@ -83,39 +138,11 @@ async def register_user(
             detail={"error_code": "INVALID_METADATA", "message": "Malformed profile metadata JSON.", "details": {}},
         )
 
-    # Role-specific required verification fields
-    if role_upper == "BUSINESS":
-        if not str(meta_dict.get("company_name", "")).strip():
-            raise HTTPException(status_code=400, detail={"error_code": "MISSING_FIELD", "message": "Registered Company Name is required for Business accounts.", "details": {}})
-        if not str(meta_dict.get("cin_or_gstin", "")).strip():
-            raise HTTPException(status_code=400, detail={"error_code": "MISSING_FIELD", "message": "CIN / GSTIN / Registration Number is required for Business verification.", "details": {}})
-    elif role_upper == "STUDENT":
-        if not str(meta_dict.get("college_name", "")).strip():
-            raise HTTPException(status_code=400, detail={"error_code": "MISSING_FIELD", "message": "College / University Name is required for Student accounts.", "details": {}})
-        if not str(meta_dict.get("graduation_year", "")).strip():
-            raise HTTPException(status_code=400, detail={"error_code": "MISSING_FIELD", "message": "Graduation Year is required for Student accounts.", "details": {}})
-    elif role_upper == "MENTOR":
-        if not str(meta_dict.get("organization", "")).strip() or not str(meta_dict.get("job_title", "")).strip():
-            raise HTTPException(status_code=400, detail={"error_code": "MISSING_FIELD", "message": "Current Organization and Job Title are required for Mentor accounts.", "details": {}})
+    _validate_role_metadata(role_upper, meta_dict)
 
     user_id = f"{role_upper[:3].lower()}_{uuid.uuid4().hex[:10]}"
+    await _store_certificate_if_present(user_id, incorporation_certificate, meta_dict)
 
-    # Store Business Incorporation Certificate in private raw bucket/directory
-    if incorporation_certificate is not None and incorporation_certificate.filename:
-        cert_name = Path(incorporation_certificate.filename).name
-        if not cert_name.lower().endswith((".pdf", ".png", ".jpg", ".jpeg")):
-            raise HTTPException(
-                status_code=400,
-                detail={"error_code": "FILE_TYPE_UNSUPPORTED", "message": "Incorporation certificate must be PDF, PNG, or JPG.", "details": {}},
-            )
-        cert_bytes = await incorporation_certificate.read()
-        if len(cert_bytes) > 5 * 1024 * 1024:
-            raise HTTPException(status_code=413, detail={"error_code": "FILE_TOO_LARGE", "message": "Certificate must be under 5 MB.", "details": {}})
-        stored_cert = storage_service.write_bytes("raw", f"certs/{user_id}_{cert_name}", cert_bytes)
-        meta_dict["incorporation_cert_path"] = stored_cert
-        meta_dict["incorporation_cert_name"] = cert_name
-
-    # Mentors require Platform Admin verification before approving builds
     is_verified = role_upper != "MENTOR"
 
     user = User(
@@ -143,22 +170,33 @@ async def register_user(
 def login_user(payload: LoginRequest, db: Session = Depends(get_db)):
     clean_email = payload.email.strip().lower()
     user = db.query(User).filter(User.email == clean_email).first()
-    if not user or not verify_password(payload.password, user.password_hash):
+    if not user:
         raise HTTPException(
             status_code=401,
-            detail={"error_code": "INVALID_CREDENTIALS", "message": "Invalid email or password.", "details": {}},
+            detail={"error_code": "INVALID_CREDENTIALS", "message": "No account found for this email. Please register first.", "details": {}},
+        )
+    if not user.password_hash:
+        raise HTTPException(
+            status_code=401,
+            detail={"error_code": "GOOGLE_AUTH_ONLY", "message": "This account was created with Google Sign-In. Click 'Continue with Google' to sign in.", "details": {}},
+        )
+    if not verify_password(payload.password, user.password_hash):
+        raise HTTPException(
+            status_code=401,
+            detail={"error_code": "INVALID_CREDENTIALS", "message": "Incorrect password. Please try again.", "details": {}},
         )
     if not user.is_active:
         raise HTTPException(
             status_code=403,
             detail={"error_code": "ACCOUNT_SUSPENDED", "message": "This account has been suspended by a Platform Admin.", "details": {}},
         )
-    if payload.expected_role and user.role != payload.expected_role.upper():
+    # Enforce Admin portal check strictly if someone tries to enter Admin portal with a non-Admin account
+    if payload.expected_role and payload.expected_role.upper() == "ADMIN" and user.role != "ADMIN":
         raise HTTPException(
             status_code=403,
             detail={
-                "error_code": "ROLE_PORTAL_MISMATCH",
-                "message": f"This account is registered under the {user.role} portal. Please sign in via the {user.role} tab.",
+                "error_code": "ADMIN_REQUIRED",
+                "message": "This account does not have Platform Admin privileges.",
                 "details": {"actual_role": user.role},
             },
         )
@@ -175,7 +213,7 @@ def exchange_firebase_token(payload: FirebaseAuthRequest, db: Session = Depends(
     except Exception as exc:
         raise HTTPException(
             status_code=401,
-            detail={"error_code": "FIREBASE_AUTH_FAILED", "message": str(exc), "details": {}},
+            detail={"error_code": "FIREBASE_AUTH_FAILED", "message": f"Google verification failed: {exc}", "details": {}},
         )
 
     user = db.query(User).filter(User.firebase_uid == fb["firebase_uid"]).first()
@@ -192,7 +230,6 @@ def exchange_firebase_token(payload: FirebaseAuthRequest, db: Session = Depends(
         token = create_access_token(user)
         return {"needs_registration": False, "access_token": token, "token_type": "bearer", "user": serialize_user(user)}
 
-    # New Firebase user: require role selection & role credentials
     if not payload.role:
         return {
             "needs_registration": True,
@@ -204,6 +241,8 @@ def exchange_firebase_token(payload: FirebaseAuthRequest, db: Session = Depends(
     role_upper = payload.role.strip().upper()
     if role_upper not in ("BUSINESS", "STUDENT", "MENTOR"):
         raise HTTPException(status_code=400, detail={"error_code": "INVALID_ROLE", "message": "Choose BUSINESS, STUDENT, or MENTOR.", "details": {}})
+
+    _validate_role_metadata(role_upper, payload.profile_meta)
 
     user = User(
         id=f"{role_upper[:3].lower()}_{uuid.uuid4().hex[:10]}",
@@ -224,6 +263,70 @@ def exchange_firebase_token(payload: FirebaseAuthRequest, db: Session = Depends(
 
     token = create_access_token(user)
     return {"needs_registration": False, "access_token": token, "token_type": "bearer", "user": serialize_user(user)}
+
+
+@router.post("/firebase-complete", status_code=201)
+async def complete_firebase_registration(
+    id_token: str = Form(...),
+    full_name: str = Form(...),
+    role: str = Form(...),
+    domain_tags: str = Form("[]"),
+    profile_meta: str = Form("{}"),
+    incorporation_certificate: UploadFile | None = File(None),
+    db: Session = Depends(get_db),
+):
+    """Completes Firebase Google Sign-In registration with role-specific verification credentials & optional certificate upload."""
+    try:
+        fb = verify_firebase_id_token(id_token)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=401,
+            detail={"error_code": "FIREBASE_AUTH_FAILED", "message": f"Google session expired or invalid: {exc}", "details": {}},
+        )
+
+    existing = db.query(User).filter((User.firebase_uid == fb["firebase_uid"]) | (User.email == fb["email"])).first()
+    if existing:
+        if not existing.firebase_uid:
+            existing.firebase_uid = fb["firebase_uid"]
+            db.commit()
+            db.refresh(existing)
+        token = create_access_token(existing)
+        return {"access_token": token, "token_type": "bearer", "user": serialize_user(existing)}
+
+    role_upper = role.strip().upper()
+    if role_upper not in ("BUSINESS", "STUDENT", "MENTOR"):
+        raise HTTPException(status_code=400, detail={"error_code": "INVALID_ROLE", "message": "Choose BUSINESS, STUDENT, or MENTOR.", "details": {}})
+
+    try:
+        tags_list = json.loads(domain_tags) if domain_tags else []
+        meta_dict = json.loads(profile_meta) if profile_meta else {}
+    except Exception:
+        raise HTTPException(status_code=400, detail={"error_code": "INVALID_METADATA", "message": "Malformed metadata JSON.", "details": {}})
+
+    _validate_role_metadata(role_upper, meta_dict)
+
+    user_id = f"{role_upper[:3].lower()}_{uuid.uuid4().hex[:10]}"
+    await _store_certificate_if_present(user_id, incorporation_certificate, meta_dict)
+
+    user = User(
+        id=user_id,
+        firebase_uid=fb["firebase_uid"],
+        full_name=(full_name or fb["full_name"]).strip(),
+        email=fb["email"],
+        role=role_upper,
+        domain_tags=json.dumps(tags_list if isinstance(tags_list, list) else []),
+        profile_meta_json=json.dumps(meta_dict),
+        is_verified=(role_upper != "MENTOR"),
+        is_active=True,
+    )
+    db.add(user)
+    db.flush()
+    log_audit_event(db, user.id, "USER_REGISTERED_FIREBASE", user.id, {"role": user.role, "is_verified": user.is_verified})
+    db.commit()
+    db.refresh(user)
+
+    token = create_access_token(user)
+    return {"access_token": token, "token_type": "bearer", "user": serialize_user(user)}
 
 
 @router.get("/me")

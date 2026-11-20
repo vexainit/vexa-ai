@@ -56,22 +56,23 @@ def decode_access_token(token: str) -> dict[str, Any] | None:
 
 
 def verify_firebase_id_token(id_token: str) -> dict[str, Any]:
-    """Verifies a Google Firebase Authentication ID token via firebase-admin."""
-    global _firebase_initialized
+    """Cryptographically verifies a Google Firebase Authentication ID token via official google-auth public certs."""
     if not settings.firebase_project_id:
         raise ValueError("Firebase Auth is not configured on backend (missing FIREBASE_PROJECT_ID).")
 
-    import firebase_admin
-    from firebase_admin import auth as fb_auth
+    from google.auth.transport import requests as google_requests
+    from google.oauth2 import id_token as google_id_token
 
-    if not _firebase_initialized:
-        if not firebase_admin._apps:
-            firebase_admin.initialize_app(options={"projectId": settings.firebase_project_id})
-        _firebase_initialized = True
+    decoded = google_id_token.verify_firebase_token(
+        id_token,
+        google_requests.Request(),
+        audience=settings.firebase_project_id,
+    )
+    if not decoded or not decoded.get("sub"):
+        raise ValueError("Invalid Firebase ID token.")
 
-    decoded = fb_auth.verify_id_token(id_token)
     return {
-        "firebase_uid": decoded["uid"],
+        "firebase_uid": decoded["sub"],
         "email": (decoded.get("email") or "").strip().lower(),
         "full_name": decoded.get("name") or (decoded.get("email") or "User").split("@")[0],
     }

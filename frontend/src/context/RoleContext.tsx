@@ -59,6 +59,7 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(nextUser));
     setToken(nextToken);
     setUser(nextUser);
+    setLoading(false);
     queryClient.clear();
   };
 
@@ -72,9 +73,12 @@ export function RoleProvider({ children }: { children: React.ReactNode }) {
     }
     try {
       const res = await apiFetch<{ user: UserProfile }>('/auth/me', { token: active });
+      // Guard against race if a newer token was saved while /auth/me was in flight
+      if (getStoredToken() !== active) return;
       setUser(res.user);
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(res.user));
     } catch {
+      if (getStoredToken() !== active) return;
       setStoredToken(null);
       localStorage.removeItem(USER_STORAGE_KEY);
       setToken(null);

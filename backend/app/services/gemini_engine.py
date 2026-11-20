@@ -382,14 +382,17 @@ def _invoke_gemini_structured(
     user_payload_json: str,
     response_schema: type,
     timeout_sec: float,
+    model_name: str | None = None,
 ) -> dict[str, Any]:
     from google import genai
     from google.genai import types
 
+    target_model = model_name or settings.gemini_model
+
     def _call() -> dict[str, Any]:
         client = genai.Client(api_key=settings.gemini_api_key)
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model=target_model,
             contents=user_payload_json,
             config=types.GenerateContentConfig(
                 system_instruction=system_instruction,
@@ -408,12 +411,21 @@ def _invoke_gemini_structured(
         return fut.result(timeout=timeout_sec)
 
 
+def _candidate_models() -> list[str]:
+    models = [settings.gemini_model.strip()]
+    for m in settings.gemini_fallback_models.split(","):
+        m = m.strip()
+        if m and m not in models:
+            models.append(m)
+    return models
+
+
 def generate_diagnostic_and_brief(
     workspace_mode: str,
     intake: dict[str, Any],
     deterministic_stats: dict[str, Any],
 ) -> tuple[dict[str, Any], int]:
-    """Run Gemini 2.5 Flash with 8s timeout + 1 retry; emit deterministic fallback on failure."""
+    """Run Gemini Flash with strict Pydantic schema; falls back across active Flash models and deterministic engine."""
     t0 = time.perf_counter()
     mode = workspace_mode.upper()
     if not settings.gemini_api_key or settings.gemini_api_key == "your_gemini_api_key_here":
@@ -430,18 +442,19 @@ def generate_diagnostic_and_brief(
     )
     sys_prompt = MODE_SYSTEM_PROMPTS.get(mode, MODE_SYSTEM_PROMPTS["SMB"])
 
-    for attempt in range(2):
+    for model_name in _candidate_models():
         try:
             result = _invoke_gemini_structured(
                 system_instruction=sys_prompt,
                 user_payload_json=user_payload,
                 response_schema=DiagnosticAndBriefResponse,
                 timeout_sec=settings.gemini_timeout_seconds,
+                model_name=model_name,
             )
             result["generation_mode"] = "gemini_2_5_flash"
             return result, int((time.perf_counter() - t0) * 1000)
         except Exception as exc:
-            logger.warning("Gemini diagnostic attempt %d failed: %s", attempt + 1, exc)
+            logger.warning("Gemini diagnostic (%s) failed: %s", model_name, exc)
 
     fallback = _build_deterministic_diagnostic_fallback(mode, intake, deterministic_stats)
     return fallback, int((time.perf_counter() - t0) * 1000)
@@ -451,7 +464,7 @@ def generate_mentor_preaudit(
     challenge_brief: dict[str, Any],
     submission: dict[str, Any],
 ) -> dict[str, Any]:
-    """Run Gemini 2.5 Flash Mentor AI Pre-Audit with deterministic fallback."""
+    """Run Gemini Flash Mentor AI Pre-Audit with deterministic fallback."""
     if not settings.gemini_api_key or settings.gemini_api_key == "your_gemini_api_key_here":
         return _build_deterministic_preaudit_fallback(challenge_brief, submission)
 
@@ -462,15 +475,16 @@ def generate_mentor_preaudit(
         },
         ensure_ascii=False,
     )
-    for attempt in range(2):
+    for model_name in _candidate_models():
         try:
             return _invoke_gemini_structured(
                 system_instruction=MODE_SYSTEM_PROMPTS["MENTOR_PREAUDIT"],
                 user_payload_json=user_payload,
                 response_schema=MentorPreAuditResponse,
                 timeout_sec=settings.gemini_timeout_seconds,
+                model_name=model_name,
             )
         except Exception as exc:
-            logger.warning("Gemini mentor pre-audit attempt %d failed: %s", attempt + 1, exc)
+            logger.warning("Gemini mentor pre-audit (%s) failed: %s", model_name, exc)
 
     return _build_deterministic_preaudit_fallback(challenge_brief, submission)

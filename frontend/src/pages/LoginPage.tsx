@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AlertCircle, Building2, ClipboardCheck, GraduationCap, Loader2, SlidersHorizontal } from 'lucide-react';
 import { ROLE_DEFAULT_ROUTE, useRole } from '../context/RoleContext';
 import { apiFetch } from '../lib/api';
-import { isFirebaseConfigured, signInWithGoogleFirebase } from '../lib/firebase';
+import { isFirebaseConfigured, PENDING_FIREBASE_TOKEN_KEY, signInWithGoogleFirebase } from '../lib/firebase';
 import type { UserProfile, UserRole } from '../types/vexa';
 
 const PORTALS: {
@@ -73,10 +73,11 @@ export function LoginPage() {
       });
 
       if (res.needs_registration) {
+        sessionStorage.setItem(PENDING_FIREBASE_TOKEN_KEY, idToken);
         navigate(
           `/register?role=${selectedRole === 'ADMIN' ? 'BUSINESS' : selectedRole}&email=${encodeURIComponent(
             res.email || ''
-          )}&name=${encodeURIComponent(res.full_name || '')}`
+          )}&name=${encodeURIComponent(res.full_name || '')}&google=1`
         );
         return;
       }
