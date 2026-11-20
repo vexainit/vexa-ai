@@ -67,6 +67,7 @@ def verify_firebase_id_token(id_token: str) -> dict[str, Any]:
         id_token,
         google_requests.Request(),
         audience=settings.firebase_project_id,
+        clock_skew_in_seconds=10,
     )
     if not decoded or not decoded.get("sub"):
         raise ValueError("Invalid Firebase ID token.")
