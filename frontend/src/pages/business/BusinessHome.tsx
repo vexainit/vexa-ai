@@ -125,14 +125,14 @@ export function BusinessHome() {
               </span>
             </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs">
+              <table className="w-full text-left border-collapse text-sm">
                 <thead>
-                  <tr className="bg-vb-canvas border-b border-vb-border font-mono text-[11px] uppercase text-vb-muted">
-                    <th className="px-4 py-3">Audit Case</th>
+                  <tr className="bg-vb-canvas border-b border-vb-border text-sm font-medium text-vb-muted">
+                    <th className="px-4 py-3">Audit case</th>
                     <th className="px-4 py-3">Mode</th>
-                    <th className="px-4 py-3">Health Score</th>
-                    <th className="px-4 py-3">Est. Monthly Leak</th>
-                    <th className="px-4 py-3">Builder Network</th>
+                    <th className="px-4 py-3">Health score</th>
+                    <th className="px-4 py-3">Monthly leak</th>
+                    <th className="px-4 py-3">Builder network</th>
                     <th className="px-4 py-3">Solutions</th>
                     <th className="px-4 py-3 text-right">Actions</th>
                   </tr>

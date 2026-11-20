@@ -29,48 +29,48 @@ export function AdminOverviewPage() {
     >
       <div className="space-y-6">
         {/* 3 Ecosystem Quick-Jump Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link to="/admin/businesses" className="vb-card p-4 hover:border-vb-teal transition-colors">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <Link to="/admin/businesses" className="vb-card p-5 hover:border-vb-teal transition-colors">
             <div className="flex items-center justify-between">
               <span className="vb-label">Businesses</span>
-              <Building2 className="w-4 h-4 text-vb-teal" />
+              <Building2 className="w-5 h-5 text-vb-teal" />
             </div>
-            <div className="tabular-num text-2xl font-bold text-vb-ink mt-1">
+            <div className="tabular-num text-3xl font-bold text-vb-ink mt-2">
               {kpis?.total_businesses ?? 0}
             </div>
-            <div className="text-[11px] text-vb-muted mt-1">
-              Manage CIN/GSTIN, Incorporation Certs &amp; Audits →
+            <div className="text-sm text-vb-muted mt-1.5">
+              Manage CIN, certificates, and audits
             </div>
           </Link>
 
-          <Link to="/admin/students" className="vb-card p-4 hover:border-vb-teal transition-colors">
+          <Link to="/admin/students" className="vb-card p-5 hover:border-vb-teal transition-colors">
             <div className="flex items-center justify-between">
               <span className="vb-label">Students</span>
-              <GraduationCap className="w-4 h-4 text-vb-teal" />
+              <GraduationCap className="w-5 h-5 text-vb-teal" />
             </div>
-            <div className="tabular-num text-2xl font-bold text-vb-ink mt-1">
+            <div className="tabular-num text-3xl font-bold text-vb-ink mt-2">
               {kpis?.total_students ?? 0}
             </div>
-            <div className="text-[11px] text-vb-muted mt-1">
-              Inspect Colleges, Cohorts &amp; Proof-of-Work →
+            <div className="text-sm text-vb-muted mt-1.5">
+              Inspect colleges and proof of work
             </div>
           </Link>
 
-          <Link to="/admin/mentors" className="vb-card p-4 hover:border-vb-teal transition-colors">
+          <Link to="/admin/mentors" className="vb-card p-5 hover:border-vb-teal transition-colors">
             <div className="flex items-center justify-between">
               <span className="vb-label">Mentors</span>
-              <Users className="w-4 h-4 text-vb-revision" />
+              <Users className="w-5 h-5 text-vb-revision" />
             </div>
-            <div className="tabular-num text-2xl font-bold text-vb-ink mt-1">
+            <div className="tabular-num text-3xl font-bold text-vb-ink mt-2">
               {kpis?.total_mentors ?? 0}
               {(kpis?.pending_mentor_verifications ?? 0) > 0 && (
-                <span className="ml-2 text-xs font-mono px-2 py-0.5 rounded bg-vb-revision-tint text-vb-revision">
+                <span className="ml-2 text-xs font-medium px-2 py-0.5 rounded bg-vb-revision-tint text-vb-revision">
                   {kpis?.pending_mentor_verifications} pending
                 </span>
               )}
             </div>
-            <div className="text-[11px] text-vb-muted mt-1">
-              Verify Mentor Approval Authority →
+            <div className="text-sm text-vb-muted mt-1.5">
+              Verify mentor approval authority
             </div>
           </Link>
         </div>
