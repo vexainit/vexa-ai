@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { CheckCircle2, Loader2 } from 'lucide-react';
 
 const STEPS = [
-  { title: '1. Profiling Data', detail: 'Vectorized Pandas/NumPy KPI & leak math (<1.5s)' },
-  { title: '2. Masking Indian PII', detail: 'Two-pass regex scrubber + salted SHA-256 + zero-leak gate' },
-  { title: '3. Synthesizing Report', detail: 'Gemini 2.5 Flash strict JSON diagnostic & scoped brief' },
+  { title: '1. Exact Number Check', detail: 'Python calculates exact KPI & INR leak math (<1.5s)' },
+  { title: '2. Privacy Masking', detail: 'Redacts Indian PII + salted SHA-256 + zero-leak gate' },
+  { title: '3. Synthesizing Report', detail: 'Gemini generates diagnostic report & scoped brief' },
 ];
 
 export function AuditProgressStepper({ active }: { active: boolean }) {

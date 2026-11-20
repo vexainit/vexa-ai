@@ -52,7 +52,7 @@ export function PIIShieldDiffDrawer({
           <div>
             <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider">
               <ShieldCheck className="w-4 h-4 text-emerald-300" />
-              <span>PII Shield Diff Inspector</span>
+              <span>Privacy Preview</span>
             </div>
             <div className="text-xs text-white/85 mt-1 font-mono">
               {data
@@ -211,7 +211,7 @@ export function PIIShieldDiffDrawer({
               onClick={onConfirmPublish}
               className="px-4 py-2 text-xs font-semibold rounded bg-vb-teal text-white hover:bg-vb-teal-dark disabled:opacity-50"
             >
-              {publishing ? 'Publishing...' : 'Verify 0% Leak & Publish to Builder Network'}
+              {publishing ? 'Posting...' : 'Verify 0% Leak & Post to Student Hub'}
             </button>
           )}
         </div>

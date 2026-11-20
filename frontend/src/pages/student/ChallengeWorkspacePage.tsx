@@ -176,7 +176,7 @@ export function ChallengeWorkspacePage() {
           <div className="lg:col-span-5 lg:sticky lg:top-6 space-y-4">
             <div className="vb-card p-5 space-y-4">
               <div className="flex items-center justify-between gap-2">
-                <span className="vb-label text-vb-ink">Safe Anonymized Dataset</span>
+                <span className="vb-label text-vb-ink">Safe Sample Data</span>
                 <span className="inline-flex items-center gap-1 text-[11px] font-mono font-semibold px-2 py-0.5 rounded bg-vb-verified-tint text-vb-verified">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   0% PII Leak Verified
@@ -221,7 +221,7 @@ export function ChallengeWorkspacePage() {
                   className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded border border-vb-teal bg-vb-surface text-vb-teal text-xs font-semibold hover:bg-vb-teal-tint transition-colors"
                 >
                   <Download className="w-4 h-4" />
-                  <span>Download Anonymized Dataset (.csv)</span>
+                  <span>Download Safe Sample Data (.csv)</span>
                 </button>
 
                 {session.role === 'STUDENT' && (

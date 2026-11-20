@@ -131,7 +131,7 @@ export function AuditReportPage() {
               className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded border border-vb-verified bg-vb-verified-tint text-vb-verified text-xs font-semibold hover:bg-emerald-100 transition-colors"
             >
               <ShieldCheck className="w-4 h-4" />
-              <span>Inspect PII Shield</span>
+              <span>Privacy Preview</span>
             </button>
             <Link
               to={`/business/audits/${audit.id}/solutions`}
@@ -300,7 +300,7 @@ export function AuditReportPage() {
                 className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded border border-vb-border bg-vb-canvas text-vb-ink text-xs font-semibold hover:border-vb-teal"
               >
                 <Download className="w-4 h-4 text-vb-teal" />
-                <span>Export Tickets (MD / CSV)</span>
+                <span>Download Task List</span>
               </button>
 
               <button
@@ -316,13 +316,13 @@ export function AuditReportPage() {
                 {audit.is_published_to_builders ? (
                   <>
                     <CheckCircle2 className="w-4 h-4" />
-                    <span>Published to Builder Network (Click to Unpublish)</span>
+                    <span>Posted to Student Hub (Click to Unpost)</span>
                   </>
                 ) : (
                   <>
                     {canPublish ? <Globe className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
                     <span>
-                      {publishMutation.isPending ? 'Updating...' : 'Publish to Vexa Builder Network'}
+                      {publishMutation.isPending ? 'Updating...' : 'Post to Student Hub'}
                     </span>
                   </>
                 )}
@@ -349,7 +349,7 @@ export function AuditReportPage() {
           <div className="relative z-10 w-full max-w-xl vb-card overflow-hidden">
             <div className="px-5 py-4 bg-vb-teal text-white flex items-center justify-between">
               <span className="font-display font-bold text-sm">
-                Self-Serve Internal Ticket Export (Notion · Linear · Jira · Trello)
+                Download Task List (Notion · Linear · Jira · Trello)
               </span>
               <button type="button" onClick={() => setTicketModalOpen(false)} className="p-1 hover:bg-white/10 rounded">
                 <X className="w-4 h-4" />

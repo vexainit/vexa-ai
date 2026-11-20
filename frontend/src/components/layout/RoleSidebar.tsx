@@ -47,7 +47,7 @@ function getSidebarGroups(role: UserRole, userId: string): NavGroup[] {
         heading: 'Overview',
         items: [
           { to: '/business', label: 'Analytics overview', icon: LayoutDashboard, end: true },
-          { to: '/business/new-audit', label: 'New 60s audit', icon: FilePlus2 },
+          { to: '/business/new-audit', label: 'New Data Scan', icon: FilePlus2 },
         ],
       },
       {

@@ -66,7 +66,7 @@ export function BusinessHome() {
           className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-vb-teal text-white text-sm font-medium hover:bg-vb-teal-dark transition-colors"
         >
           <FilePlus2 className="w-4 h-4" />
-          <span>New audit</span>
+          <span>New Data Scan</span>
         </Link>
       }
     >

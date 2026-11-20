@@ -202,10 +202,10 @@ export function NewAuditPage() {
         <div>
           <span className="vb-label">60-Second Structured Intake &amp; Ingestion</span>
           <h1 className="font-display font-extrabold text-[28px] text-vb-ink mt-0.5">
-            New Operational Diagnostic Audit
+            New Data Scan
           </h1>
           <p className="text-sm text-vb-muted mt-1">
-            Click a pre-loaded Indian dataset preset or upload your own CSV/XLSX to run Pandas profiling, PII scrubbing, and Gemini 2.5 Flash synthesis in under 5 seconds.
+            Click a pre-loaded Indian dataset preset or upload your own CSV/XLSX to run an Exact Number Check, Privacy Preview, and Gemini synthesis in under 5 seconds.
           </p>
         </div>
 

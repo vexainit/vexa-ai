@@ -120,7 +120,7 @@ export function LandingPage() {
             <div className="grid grid-cols-3 gap-4 pt-4 border-t border-vb-border max-w-xl">
               <div>
                 <div className="tabular-num text-lg font-bold text-vb-ink">&lt; 1.5s</div>
-                <div className="text-xs text-vb-muted">Pandas profiling</div>
+                <div className="text-xs text-vb-muted">Exact Number Check</div>
               </div>
               <div>
                 <div className="tabular-num text-lg font-bold text-vb-verified">0% PII</div>
@@ -202,8 +202,8 @@ export function LandingPage() {
               {
                 num: '01',
                 icon: FileSpreadsheet,
-                title: 'Deterministic profiling',
-                body: 'Pandas computes exact delay rates, COD RTO %, missing fields, and monthly INR leakage in under 1.5 seconds.',
+                title: 'Exact Number Check',
+                body: 'Python computes exact delay rates, COD RTO %, missing fields, and monthly INR leakage in under 1.5 seconds — no AI guessing.',
               },
               {
                 num: '02',
