@@ -1,8 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { RoleProvider } from './context/RoleContext';
+import { ROLE_DEFAULT_ROUTE, RoleProvider, useRole } from './context/RoleContext';
+import type { UserRole } from './types/vexa';
 import { LandingPage } from './pages/LandingPage';
-import { OnboardingPage } from './pages/OnboardingPage';
+import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
+import { ProfilePage } from './pages/ProfilePage';
 import { BusinessHome } from './pages/business/BusinessHome';
 import { NewAuditPage } from './pages/business/NewAuditPage';
 import { AuditReportPage } from './pages/business/AuditReportPage';
@@ -13,6 +16,10 @@ import { SubmissionsPage } from './pages/student/SubmissionsPage';
 import { PortfolioPage } from './pages/student/PortfolioPage';
 import { MentorReviewsPage } from './pages/mentor/MentorReviewsPage';
 import { AdminOverviewPage } from './pages/admin/AdminOverviewPage';
+import { AdminBusinessesPage } from './pages/admin/AdminBusinessesPage';
+import { AdminStudentsPage } from './pages/admin/AdminStudentsPage';
+import { AdminMentorsPage } from './pages/admin/AdminMentorsPage';
+import { AdminDatabasePage } from './pages/admin/AdminDatabasePage';
 import { AdminGovernancePage } from './pages/admin/AdminGovernancePage';
 
 const queryClient = new QueryClient({
@@ -25,37 +32,181 @@ const queryClient = new QueryClient({
   },
 });
 
+function ProtectedRoute({
+  allowed,
+  children,
+}: {
+  allowed?: UserRole[];
+  children: React.ReactNode;
+}) {
+  const { user, loading, isAuthenticated } = useRole();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-vb-canvas flex items-center justify-center text-xs font-mono text-vb-muted">
+        Verifying session...
+      </div>
+    );
+  }
+  if (!isAuthenticated || !user) {
+    return <Navigate to="/login" replace />;
+  }
+  if (allowed && !allowed.includes(user.role)) {
+    return <Navigate to={ROLE_DEFAULT_ROUTE[user.role]} replace />;
+  }
+  return <>{children}</>;
+}
+
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <RoleProvider>
         <BrowserRouter>
           <Routes>
-            {/* Public Landing & Onboarding (Pages 1 & 2) */}
+            {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
-            <Route path="/onboarding" element={<OnboardingPage />} />
-
-            {/* Business / Consumer Dashboard (Pages 3, 4, 5, 6 Overlay, 7) */}
-            <Route path="/business" element={<BusinessHome />} />
-            <Route path="/business/new-audit" element={<NewAuditPage />} />
-            <Route path="/business/audits/:id" element={<AuditReportPage />} />
-            <Route path="/business/audits/:id/solutions" element={<MatchedSolutionsPage />} />
-
-            {/* Student / Builder Dashboard (Pages 8, 9, 10, 11) */}
-            <Route path="/student/challenges" element={<ChallengeFeedPage />} />
-            <Route path="/student/challenges/:id" element={<ChallengeWorkspacePage />} />
-            <Route path="/student/submissions" element={<SubmissionsPage />} />
-            <Route path="/student/submissions/:id" element={<SubmissionsPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/portfolio/:student_id" element={<PortfolioPage />} />
 
-            {/* Mentor Review Dashboard (Page 12) */}
-            <Route path="/mentor/reviews" element={<MentorReviewsPage />} />
+            {/* Shared Authenticated Profile */}
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
 
-            {/* Platform Admin Control Plane (Pages 13 & 14) */}
-            <Route path="/admin" element={<AdminOverviewPage />} />
-            <Route path="/admin/governance" element={<AdminGovernancePage />} />
+            {/* Business Portal */}
+            <Route
+              path="/business"
+              element={
+                <ProtectedRoute allowed={['BUSINESS', 'ADMIN']}>
+                  <BusinessHome />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/business/new-audit"
+              element={
+                <ProtectedRoute allowed={['BUSINESS', 'ADMIN']}>
+                  <NewAuditPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/business/audits/:id"
+              element={
+                <ProtectedRoute allowed={['BUSINESS', 'ADMIN']}>
+                  <AuditReportPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/business/audits/:id/solutions"
+              element={
+                <ProtectedRoute allowed={['BUSINESS', 'ADMIN']}>
+                  <MatchedSolutionsPage />
+                </ProtectedRoute>
+              }
+            />
 
-            {/* Fallback */}
+            {/* Student Portal */}
+            <Route
+              path="/student/challenges"
+              element={
+                <ProtectedRoute allowed={['STUDENT', 'MENTOR', 'ADMIN']}>
+                  <ChallengeFeedPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/challenges/:id"
+              element={
+                <ProtectedRoute allowed={['STUDENT', 'MENTOR', 'ADMIN']}>
+                  <ChallengeWorkspacePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/submissions"
+              element={
+                <ProtectedRoute allowed={['STUDENT', 'ADMIN']}>
+                  <SubmissionsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/student/submissions/:id"
+              element={
+                <ProtectedRoute allowed={['STUDENT', 'ADMIN']}>
+                  <SubmissionsPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Mentor Portal */}
+            <Route
+              path="/mentor/reviews"
+              element={
+                <ProtectedRoute allowed={['MENTOR', 'ADMIN']}>
+                  <MentorReviewsPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Platform Admin Control Plane (All 3 Ecosystems + Live DB) */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute allowed={['ADMIN']}>
+                  <AdminOverviewPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/businesses"
+              element={
+                <ProtectedRoute allowed={['ADMIN']}>
+                  <AdminBusinessesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/students"
+              element={
+                <ProtectedRoute allowed={['ADMIN']}>
+                  <AdminStudentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/mentors"
+              element={
+                <ProtectedRoute allowed={['ADMIN']}>
+                  <AdminMentorsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/database"
+              element={
+                <ProtectedRoute allowed={['ADMIN']}>
+                  <AdminDatabasePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/governance"
+              element={
+                <ProtectedRoute allowed={['ADMIN']}>
+                  <AdminGovernancePage />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>

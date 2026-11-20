@@ -1,4 +1,4 @@
-"""Vexa Bridge FastAPI Application Entrypoint (PRD Ch. 11, 17.1, 21.1)."""
+"""Vexa Bridge FastAPI Application Entrypoint (Real Auth, Zero Mock Data, Cloud Run + Cloud SQL Ready)."""
 from __future__ import annotations
 
 import logging
@@ -12,8 +12,8 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.database import Base, SessionLocal, engine
-from app.routers import admin, audits, challenges, health, reviews, submissions
-from app.services.seed_demo import seed_demo_data
+from app.routers import admin, audits, auth, challenges, health, reviews, submissions
+from app.services.auth_service import ensure_bootstrap_admin
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 
@@ -23,7 +23,7 @@ async def lifespan(_app: FastAPI):
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
-        seed_demo_data(db, force=False)
+        ensure_bootstrap_admin(db)
     finally:
         db.close()
     yield
@@ -45,7 +45,6 @@ app.add_middleware(
 )
 
 
-# Uniform Error Envelope Handlers (PRD Ch. 11.3 & 18.1)
 @app.exception_handler(HTTPException)
 async def http_exception_handler(_request: Request, exc: HTTPException):
     if isinstance(exc.detail, dict) and "error_code" in exc.detail:
@@ -73,9 +72,9 @@ async def validation_exception_handler(_request: Request, exc: RequestValidation
     return JSONResponse(status_code=422, content={**envelope, "detail": envelope})
 
 
-# Mount all /api/v1 routers
 API_PREFIX = "/api/v1"
 app.include_router(health.router, prefix=API_PREFIX)
+app.include_router(auth.router, prefix=API_PREFIX)
 app.include_router(audits.router, prefix=API_PREFIX)
 app.include_router(challenges.router, prefix=API_PREFIX)
 app.include_router(submissions.router, prefix=API_PREFIX)
@@ -83,7 +82,6 @@ app.include_router(reviews.router, prefix=API_PREFIX)
 app.include_router(admin.router, prefix=API_PREFIX)
 
 
-# Serve compiled React SPA in unified Cloud Run deployment (PRD Ch. 21.1)
 STATIC_DIR = Path(__file__).resolve().parents[1] / "static"
 if STATIC_DIR.exists():
     assets_dir = STATIC_DIR / "assets"

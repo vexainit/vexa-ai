@@ -136,7 +136,7 @@ export function MatchedSolutionsPage() {
                 : 'No mentor-approved solutions yet'}
             </h2>
             <p className="text-xs text-vb-muted max-w-md mx-auto">
-              Switch to the <strong>Mentor Reviewer</strong> persona in the left sidebar to complete the 3-point scorecard and watch the verified build appear here live.
+              Solutions appear here automatically once a Platform-Verified Mentor signs all 3 quality checks.
             </p>
           </div>
         ) : (

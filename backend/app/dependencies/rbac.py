@@ -1,4 +1,4 @@
-"""RBAC & Ownership Enforcement Dependencies (PRD Ch. 2.2 & 17.2)."""
+"""RBAC & Ownership Enforcement Dependencies supporting JWT Bearer & Firebase ID Tokens (PRD Ch. 2.2 & 17.2)."""
 from __future__ import annotations
 
 from fastapi import Depends, Header, HTTPException
@@ -6,39 +6,47 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import DiagnosticCase, User
+from app.services.auth_service import decode_access_token, verify_firebase_id_token
 
 
 def get_current_user(
-    x_vexa_user_id: str | None = Header(default=None, alias="X-Vexa-User-Id"),
-    x_vexa_role: str | None = Header(default=None, alias="X-Vexa-Role"),
+    authorization: str | None = Header(default=None, alias="Authorization"),
     db: Session = Depends(get_db),
 ) -> User:
-    if not x_vexa_user_id or not x_vexa_role:
+    if not authorization or not authorization.lower().startswith("bearer "):
         raise HTTPException(
             status_code=401,
             detail={
-                "error_code": "AUTH_INVALID_USER",
-                "message": "Missing X-Vexa-User-Id or X-Vexa-Role header.",
+                "error_code": "AUTH_REQUIRED",
+                "message": "Authentication required. Please sign in.",
                 "details": {},
             },
         )
-    user = db.query(User).filter(User.id == x_vexa_user_id).first()
+
+    token = authorization.split(" ", 1)[1].strip()
+    user: User | None = None
+
+    # 1. Try Vexa signed JWT session token
+    claims = decode_access_token(token)
+    if claims and claims.get("sub"):
+        user = db.query(User).filter(User.id == claims["sub"]).first()
+    else:
+        # 2. Fallback: verify Firebase ID token directly
+        try:
+            fb = verify_firebase_id_token(token)
+            user = db.query(User).filter(User.firebase_uid == fb["firebase_uid"]).first()
+            if not user and fb.get("email"):
+                user = db.query(User).filter(User.email == fb["email"]).first()
+        except Exception:
+            user = None
+
     if not user or not user.is_active:
         raise HTTPException(
             status_code=401,
             detail={
                 "error_code": "AUTH_INVALID_USER",
-                "message": "User inactive or not found.",
+                "message": "Session expired, user not found, or account suspended.",
                 "details": {},
-            },
-        )
-    if user.role != x_vexa_role.upper():
-        raise HTTPException(
-            status_code=403,
-            detail={
-                "error_code": "RBAC_ROLE_MISMATCH",
-                "message": "Role header mismatch.",
-                "details": {"expected": user.role, "received": x_vexa_role.upper()},
             },
         )
     return user

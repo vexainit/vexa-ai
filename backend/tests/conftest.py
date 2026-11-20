@@ -1,7 +1,6 @@
-"""Pytest fixtures for isolated SQLite test DB and FastAPI TestClient."""
+"""Pytest fixtures using isolated SQLite DB with real Bootstrap Admin & zero mock data."""
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 
@@ -14,7 +13,7 @@ if str(BACKEND_DIR) not in sys.path:
 
 from app.database import Base, SessionLocal, engine
 from app.main import app
-from app.services.seed_demo import seed_demo_data
+from app.services.auth_service import ensure_bootstrap_admin
 
 
 @pytest.fixture(scope="module")
@@ -23,7 +22,7 @@ def client():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
-        seed_demo_data(db, force=True)
+        ensure_bootstrap_admin(db)
     finally:
         db.close()
     with TestClient(app) as c:

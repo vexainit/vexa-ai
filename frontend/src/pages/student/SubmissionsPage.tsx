@@ -196,7 +196,7 @@ export function SubmissionsPage() {
                     <div className="p-3 rounded bg-vb-canvas border border-vb-border flex items-center gap-2 text-xs text-vb-muted">
                       <Clock className="w-4 h-4 text-vb-revision shrink-0" />
                       <span>
-                        In Verified Mentor Review Queue. Switch to the <strong>Mentor Reviewer</strong> role in the sidebar to approve live.
+                        In Verified Mentor Review Queue. You will see the updated badge and endorsement here as soon as a verified mentor completes review.
                       </span>
                     </div>
                   )}

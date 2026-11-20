@@ -1,4 +1,4 @@
-"""Application settings loaded from environment / .env (PRD Ch. 17.1)."""
+"""Application settings loaded from environment / .env (PRD Ch. 17.1 & GCP Cloud Run)."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -28,6 +28,15 @@ class Settings(BaseSettings):
     sample_data_dir: str = str(_DEFAULT_SAMPLE_DIR)
     gemini_timeout_seconds: float = 8.0
     max_upload_mb: int = 10
+
+    # Auth & Firebase
+    jwt_secret: str = "vexa-bridge-dev-secret-change-in-production-2026"
+    jwt_expire_hours: int = 72
+    firebase_project_id: str = ""
+
+    # Platform Admin Bootstrap (created if no ADMIN exists in DB; zero mock cases seeded)
+    admin_bootstrap_email: str = "admin@vexabridge.in"
+    admin_bootstrap_password: str = "Admin@Vexa2026"
 
 
 settings = Settings()

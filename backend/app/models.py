@@ -1,4 +1,4 @@
-"""SQLAlchemy 2.0 ORM models matching PRD Chapter 11.2 DDL exactly."""
+"""SQLAlchemy 2.0 ORM models matching PRD Ch. 11.2 + Real Auth & Role Credential Metadata."""
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -17,10 +17,13 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    firebase_uid: Mapped[str | None] = mapped_column(String(128), unique=True, nullable=True)
     full_name: Mapped[str] = mapped_column(String(160), nullable=False)
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False)
+    password_hash: Mapped[str | None] = mapped_column(Text, nullable=True)
     role: Mapped[str] = mapped_column(String(20), nullable=False)
     domain_tags: Mapped[str] = mapped_column(Text, default="[]", nullable=False)
+    profile_meta_json: Mapped[str] = mapped_column(Text, default="{}", nullable=False)
     is_verified: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, nullable=False)
@@ -49,7 +52,9 @@ class DiagnosticCase(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, nullable=False)
 
     owner: Mapped[User] = relationship("User", foreign_keys=[owner_id])
-    submissions: Mapped[list["BuilderSubmission"]] = relationship("BuilderSubmission", back_populates="case")
+    submissions: Mapped[list["BuilderSubmission"]] = relationship(
+        "BuilderSubmission", back_populates="case", cascade="all, delete-orphan"
+    )
 
     __table_args__ = (
         Index("idx_cases_published", "is_published_to_builders", "status"),

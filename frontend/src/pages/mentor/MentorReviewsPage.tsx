@@ -141,9 +141,7 @@ export function MentorReviewsPage() {
           <div className="vb-card p-4 border-vb-revision bg-vb-revision-tint flex items-start gap-2.5 text-xs text-vb-revision">
             <Lock className="w-4 h-4 shrink-0 mt-0.5" />
             <div>
-              <strong>Pending Admin Verification (Read-Only Mode):</strong> Your mentor account (`{session.userId}`) has{' '}
-              <span className="font-mono">is_verified = false</span>. Switch to Platform Admin in the sidebar and click{' '}
-              <strong>Verify Mentor</strong> to unlock binding pilot approvals.
+              <strong>Pending Admin Verification (Read-Only Mode):</strong> Your mentor credentials are under review (`is_verified = false`). Once a Platform Admin approves your profile, binding 3-point pilot approvals will unlock automatically.
             </div>
           </div>
         )}

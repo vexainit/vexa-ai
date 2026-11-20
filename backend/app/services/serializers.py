@@ -1,4 +1,4 @@
-"""Shared serialization helpers & preset definitions."""
+"""Shared serialization helpers & sample template metadata."""
 from __future__ import annotations
 
 import json
@@ -38,7 +38,7 @@ PRESET_METADATA: dict[str, dict[str, Any]] = {
     "personal_upi_30d": {
         "filename": "personal_upi_30d.csv",
         "workspace_mode": "PERSONAL",
-        "organization_or_profile_name": "Aarav Personal UPI Audit",
+        "organization_or_profile_name": "Personal 30-Day UPI Audit",
         "domain_category": "Salaried",
         "scale_tier": "₹25k–₹75k",
         "primary_pain_points": ["Micro-Transaction Drift", "Late-Night Impulse Spend"],
@@ -70,12 +70,17 @@ def save_system_config(db: Session, cfg: dict[str, Any]) -> dict[str, Any]:
 
 
 def serialize_user(u: User) -> dict[str, Any]:
+    meta = json.loads(u.profile_meta_json or "{}")
+    # Never expose raw server filesystem path to clients; expose boolean + filename
+    safe_meta = {k: v for k, v in meta.items() if k != "incorporation_cert_path"}
+    safe_meta["has_incorporation_cert"] = bool(meta.get("incorporation_cert_path"))
     return {
         "id": u.id,
         "full_name": u.full_name,
         "email": u.email,
         "role": u.role,
         "domain_tags": json.loads(u.domain_tags or "[]"),
+        "profile_meta": safe_meta,
         "is_verified": bool(u.is_verified),
         "is_active": bool(u.is_active),
         "created_at": u.created_at.isoformat() if u.created_at else "",
@@ -140,6 +145,7 @@ def serialize_case(c: DiagnosticCase, db: Session, include_pii_summary: bool = T
     payload: dict[str, Any] = {
         "id": c.id,
         "owner_id": c.owner_id,
+        "owner_name": c.owner.full_name if c.owner else c.owner_id,
         "workspace_mode": c.workspace_mode,
         "title": c.title,
         "domain_category": c.domain_category,

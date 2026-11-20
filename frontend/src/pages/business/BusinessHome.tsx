@@ -28,23 +28,27 @@ export function BusinessHome() {
   const approvedPilots = audits.reduce((acc, a) => acc + (a.submission_counts?.approved || 0), 0);
 
   return (
-    <AppShell>
+    <AppShell
+      title="Diagnostic Audits"
+      actions={
+        <Link
+          to="/business/new-audit"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded bg-vb-teal text-white text-xs font-semibold hover:bg-vb-teal-dark transition-colors"
+        >
+          <FilePlus2 className="w-3.5 h-3.5" />
+          <span>New Audit</span>
+        </Link>
+      }
+    >
       <div className="space-y-6">
         {/* Page Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <span className="vb-label">Business &amp; Consumer Operations Workbench</span>
-            <h1 className="font-display font-extrabold text-[28px] text-vb-ink leading-tight mt-0.5">
-              Diagnostic Audits &amp; Execution Pipeline
-            </h1>
-          </div>
-          <Link
-            to="/business/new-audit"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded bg-vb-teal text-white text-xs font-semibold hover:bg-vb-teal-dark transition-colors"
-          >
-            <FilePlus2 className="w-4 h-4" />
-            <span>+ New 60-Second Audit</span>
-          </Link>
+        <div>
+          <h1 className="font-display font-bold text-xl text-vb-ink">
+            Operational Diagnostic Ledger
+          </h1>
+          <p className="text-xs text-vb-muted mt-0.5">
+            Track uploaded spreadsheets, quantified monthly INR leakage, PII isolation, and mentor-approved pilots.
+          </p>
         </div>
 
         {/* Network Error Recovery Banner */}

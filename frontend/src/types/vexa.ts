@@ -11,15 +11,65 @@ export type SolutionType =
   | 'Web App'
   | 'Data Analytics';
 
+export interface UserProfileMeta {
+  // Business fields
+  company_name?: string;
+  cin_or_gstin?: string;
+  incorporation_cert_name?: string;
+  has_incorporation_cert?: boolean;
+  business_domain?: string;
+  scale_tier?: string;
+  website_url?: string;
+  // Student fields
+  college_name?: string;
+  student_id_number?: string;
+  degree_branch?: string;
+  graduation_year?: string;
+  github_url?: string;
+  // Mentor fields
+  organization?: string;
+  job_title?: string;
+  years_experience?: string;
+  linkedin_url?: string;
+  expertise_summary?: string;
+  // Admin fields
+  department?: string;
+}
+
 export interface UserProfile {
   id: string;
   full_name: string;
   email: string;
   role: UserRole;
   domain_tags: string[];
+  profile_meta?: UserProfileMeta;
   is_verified: boolean;
   is_active: boolean;
   created_at: string;
+  stats?: {
+    audits_count: number;
+    submissions_count: number;
+    verified_builds_count: number;
+    reviews_completed: number;
+  };
+}
+
+export interface HealthResponse {
+  status: string;
+  database: string;
+  gemini_model: string;
+  gemini_configured: boolean;
+  firebase_configured: boolean;
+  storage_mode: string;
+  active_workspace_modes: WorkspaceMode[];
+  live_counts: {
+    businesses: number;
+    students: number;
+    mentors: number;
+    audits: number;
+    published_challenges: number;
+    approved_pilots: number;
+  };
 }
 
 export interface DeterministicStats {
@@ -97,6 +147,7 @@ export interface PIISummary {
 export interface DiagnosticCase {
   id: string;
   owner_id: string;
+  owner_name?: string;
   workspace_mode: WorkspaceMode;
   title: string;
   domain_category: string;
@@ -110,12 +161,6 @@ export interface DiagnosticCase {
   is_published_to_builders: boolean;
   status: CaseStatus;
   latency_ms?: number;
-  stage_timings_ms?: {
-    profiling_ms: number;
-    pii_scrub_ms: number;
-    gemini_ms: number;
-    total_ms: number;
-  };
   submission_counts: {
     pending: number;
     revision_needed: number;
@@ -258,6 +303,10 @@ export interface AdminOverviewResponse {
     pending_mentor_reviews: number;
     approved_business_pilots: number;
     avg_review_turnaround_mins: number;
+    total_businesses: number;
+    total_students: number;
+    total_mentors: number;
+    pending_mentor_verifications: number;
   };
   funnel: { stage: string; count: number }[];
   config: AdminConfig;
@@ -265,4 +314,11 @@ export interface AdminOverviewResponse {
   cases: DiagnosticCase[];
   submissions: BuilderSubmission[];
   audit_logs: AuditLogEntry[];
+}
+
+export interface DatabaseTableResponse {
+  table: string;
+  total_rows: number;
+  columns: string[];
+  rows: Record<string, unknown>[];
 }

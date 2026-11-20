@@ -1,6 +1,22 @@
-import type { UserRole } from '../types/vexa';
-
 const API_BASE = import.meta.env.VITE_API_BASE || '/api/v1';
+export const AUTH_TOKEN_KEY = 'vexa_bridge_jwt_token_v2';
+
+export function getStoredToken(): string | null {
+  try {
+    return localStorage.getItem(AUTH_TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function setStoredToken(token: string | null): void {
+  try {
+    if (token) localStorage.setItem(AUTH_TOKEN_KEY, token);
+    else localStorage.removeItem(AUTH_TOKEN_KEY);
+  } catch {
+    // ignore
+  }
+}
 
 export class VexaApiError extends Error {
   constructor(
@@ -15,12 +31,14 @@ export class VexaApiError extends Error {
 
 export async function apiFetch<T>(
   path: string,
-  options: RequestInit & { userId?: string; role?: UserRole } = {}
+  options: RequestInit & { token?: string | null; userId?: string; role?: string } = {}
 ): Promise<T> {
-  const { userId, role, headers, ...rest } = options;
+  const { token, userId: _u, role: _r, headers, ...rest } = options;
+  const activeToken = token !== undefined ? token : getStoredToken();
   const authHeaders: Record<string, string> = {};
-  if (userId) authHeaders['X-Vexa-User-Id'] = userId;
-  if (role) authHeaders['X-Vexa-Role'] = role;
+  if (activeToken) {
+    authHeaders['Authorization'] = `Bearer ${activeToken}`;
+  }
 
   const res = await fetch(`${API_BASE}${path}`, {
     ...rest,
@@ -45,13 +63,11 @@ export async function apiFetch<T>(
 export async function apiDownload(
   path: string,
   filename: string,
-  auth: { userId: string; role: UserRole }
+  _auth?: { userId?: string; role?: string }
 ): Promise<void> {
+  const activeToken = getStoredToken();
   const res = await fetch(`${API_BASE}${path}`, {
-    headers: {
-      'X-Vexa-User-Id': auth.userId,
-      'X-Vexa-Role': auth.role,
-    },
+    headers: activeToken ? { Authorization: `Bearer ${activeToken}` } : {},
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));

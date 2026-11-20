@@ -148,7 +148,7 @@ export function ChallengeFeedPage() {
             <p className="text-xs text-vb-muted max-w-md mx-auto">
               {hasFilters
                 ? 'Clear your active filters to view all open PII-safe business challenges.'
-                : 'Switch to the Business Owner role in the sidebar to publish a diagnostic bottleneck.'}
+                : 'No businesses have published challenges yet. Check back soon as new PII-safe briefs are published.'}
             </p>
             {hasFilters && (
               <button
